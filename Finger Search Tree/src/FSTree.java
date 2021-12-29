@@ -2,10 +2,9 @@
 public class FSTree {
 	private InternalNode root;
 	private Leaf firstLeaf;
-	public FSTree(InternalNode root, Leaf firstLeaf) {
-		super();
-		this.root = root;
-		this.firstLeaf = firstLeaf;
+	public FSTree() {
+		root = new InternalNode(1, null);
+		firstLeaf = null;
 	}
 	
 	//TODO
@@ -15,7 +14,27 @@ public class FSTree {
 	
 	//TODO
 	public Leaf insert(Leaf f, int x) {
-		return null;
+		Triple newTriple, firstTriple, temp1, temp2;
+		if(f == null) {
+			firstTriple = new Triple(0, 0, root, null);
+			f = new Leaf(0, x, null, null, firstTriple, root);
+			return f;
+		}
+		f.incCounter();
+		f.updateTriple();
+		firstTriple = firstLeaf.getFirstTriple();
+		newTriple = new Triple(firstTriple.getI(), firstTriple.getJ(), firstTriple.getAncestor(), null);
+		temp1 = firstTriple.getNext();
+		while(temp1 != null) {
+			
+		}
+		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), f.getFirstTriple(), f.getParent());
+		f.setNext(newLeaf);
+		return newLeaf;
+	}
+	//TODO
+	public void split() {
+		
 	}
 	
 	//TODO
