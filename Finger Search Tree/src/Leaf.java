@@ -1,18 +1,20 @@
+import java.util.LinkedList;
 
-public class Leaf{
+public class Leaf extends Node{
 	private int counter;
 	private int value;
 	private Leaf prev;
 	private Leaf next;
-	private Triple firstTriple;
-	private InternalNode parent;
-	public Leaf(int counter, int value, Leaf prev, Leaf next, Triple firstTriple, InternalNode parent) {
+	private LinkedList<Triple> triples;
+	private IntermediateNodeLevel1 upNode;
+	public Leaf(int counter, int value, Leaf prev, Leaf next, LinkedList<Triple> triples,
+			IntermediateNodeLevel1 upNode) {
 		this.counter = counter;
 		this.value = value;
 		this.next = next;
 		this.prev = prev;
-		this.firstTriple = firstTriple;
-		this.parent = parent;
+		this.triples = triples;
+		this.upNode = upNode;
 	}
 
 
@@ -20,7 +22,8 @@ public class Leaf{
 		String counterString = Integer.toBinaryString(counter);
 		for(int i = counterString.length() - 1; i >= 0; i--) {
 			if(counterString.charAt(i) == '1') {
-				System.out.println("binary counter: " + counterString + " and value of d:" + (counterString.length()-i));
+				System.out.println("binary counter: " + counterString + 
+						" and value of d:" + (counterString.length()-i));
 				return counterString.length()-i;
 			}
 		}
@@ -29,30 +32,30 @@ public class Leaf{
 	}
 	
 	public void updateTriple() {
-		if(firstTriple == null) {
-			Triple newTriple = new Triple(0, 0, parent, null);
-			firstTriple = newTriple;
+		if(triples.isEmpty() == true) {
+			Triple newTriple = new Triple(0, 0, upNode.getUpNode());
+			triples.add(newTriple);
 			return;
 		}
-		if(firstTriple.getI() >= 1) {
-			Triple temp = firstTriple;
-			Triple newTriple = new Triple(0, 0, parent, temp);
-			firstTriple = newTriple;
+		if(triples.getFirst().getI() >= 1) {
+			Triple newTriple = new Triple(0, 0, upNode.getUpNode());
+			triples.addFirst(newTriple);
 		}else {
-			int newJ = firstTriple.getJ() + 1;
-			firstTriple.setI(newJ);
-			firstTriple.setJ(newJ);
-			firstTriple.setAncestor(firstTriple.getAncestor().getParent());
+			int newJ = triples.getFirst().getJ() + 1;
+			triples.getFirst().setI(newJ);
+			triples.getFirst().setJ(newJ);
+			triples.getFirst().setAncestor(triples.getFirst().getAncestor().getUpNode().getUpNode());
 		}
 		mergeTriple();
 	}
 	
 	public void mergeTriple() {
-		Triple second = firstTriple.getNext();
-		if(second != null) {
-			if(firstTriple.getJ() == (second.getI()-1)) {
-				second.setI(firstTriple.getI());
-				firstTriple = second;
+		if(triples.size()>1) {
+			Triple first 	= triples.get(0);
+			Triple second 	= triples.get(1);
+			if(first.getJ() == (second.getI() - 1)) {
+				second.setI(first.getI());
+				triples.removeFirst();
 			}
 		}
 	}
@@ -78,31 +81,28 @@ public class Leaf{
 	public void setPrev(Leaf prev) {
 		this.prev = prev;
 	}
-
-	public Triple getFirstTriple() {
-		return firstTriple;
-	}
-
-	public void setFirstTriple(Triple firstTriple) {
-		this.firstTriple = firstTriple;
-	}
 	
-	public InternalNode getParent() {
-		return parent;
+	public LinkedList<Triple> getTriples() {
+		return triples;
 	}
-
-	public void setParent(InternalNode parent) {
-		this.parent = parent;
+	public void setTriples(LinkedList<Triple> triples) {
+		this.triples = triples;
 	}
-
-
 	public int getValue() {
 		return value;
 	}
-
-
 	public void setValue(int value) {
 		this.value = value;
+	}
+
+
+	public IntermediateNodeLevel1 getUpNode() {
+		return upNode;
+	}
+
+
+	public void setUpNode(IntermediateNodeLevel1 upNode) {
+		this.upNode = upNode;
 	}
 	
 }
