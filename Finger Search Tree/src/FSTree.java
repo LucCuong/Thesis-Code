@@ -13,6 +13,19 @@ public class FSTree {
 	
 	//TODO
 	public Leaf search(Leaf f, int x) {
+		Leaf temp;
+		if(f.getValue() == x)
+			return f;
+		temp = f.getPrev();
+		if(temp != null) {
+			if (temp.getValue() == x)
+				return temp;
+		}
+		temp = f.getNext();
+		if(temp != null) {
+			if(temp.getValue() == x)
+				return temp;
+		}
 		return null;
 	}
 	
