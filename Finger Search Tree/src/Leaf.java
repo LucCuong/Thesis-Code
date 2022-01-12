@@ -32,6 +32,7 @@ public class Leaf extends Node{
 	}
 	
 	public void updateTriple() {
+		InternalNode ancestor;
 		if(triples.isEmpty() == true) {
 			Triple newTriple = new Triple(0, 0, upNode.getUpNode());
 			triples.add(newTriple);
@@ -44,7 +45,9 @@ public class Leaf extends Node{
 			int newJ = triples.getFirst().getJ() + 1;
 			triples.getFirst().setI(newJ);
 			triples.getFirst().setJ(newJ);
-			triples.getFirst().setAncestor(triples.getFirst().getAncestor().getUpNode().getUpNode());
+			ancestor = triples.getFirst().getAncestor();
+			if(ancestor.getUpNode() != null)
+				triples.getFirst().setAncestor(ancestor.getUpNode().getUpNode());
 		}
 		mergeTriple();
 	}

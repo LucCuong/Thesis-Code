@@ -17,15 +17,26 @@ public class FSTree {
 		if(f.getValue() == x)
 			return f;
 		temp = f.getPrev();
+		//check the left leaf of l
 		if(temp != null) {
 			if (temp.getValue() == x)
 				return temp;
 		}
 		temp = f.getNext();
+		//check the right leaf of l
 		if(temp != null) {
 			if(temp.getValue() == x)
 				return temp;
 		}
+		if(f.getValue() < x) {
+			
+		}
+		return null;
+	}
+	
+	public Leaf search(Leaf f, int x, boolean direction, boolean lastDirection) {
+		
+		
 		return null;
 	}
 	
@@ -38,7 +49,7 @@ public class FSTree {
 			Triple firstTriple = new Triple(0, 0, root);
 			triples = new LinkedList<Triple>();
 			triples.add(firstTriple);
-			f = new Leaf(0, x, null, null, triples, root.getLeftINL1());
+			f = new Leaf(1, x, null, null, triples, root.getLeftINL1());
 			return f;
 		}
 		if(f.getValue() == x)
@@ -49,7 +60,6 @@ public class FSTree {
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
 		f.setNext(newLeaf);
 		ancestor = f.getTriples().getFirst().getAncestor();
-		
 		ancestor.split();
 		return newLeaf;
 	}
