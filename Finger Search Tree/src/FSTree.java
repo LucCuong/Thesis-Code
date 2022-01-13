@@ -41,10 +41,13 @@ public class FSTree {
 	}
 	
 	//TODO
+	@SuppressWarnings("unchecked")
 	public Leaf insert(Leaf f, int x) {
 		LinkedList<Triple> triples;
 		LinkedList<Triple> newTriples;
 		InternalNode ancestor;
+		IntermediateNodeLevel1 upNode;
+		//empty tree
 		if(f == null) {
 			Triple firstTriple = new Triple(0, 0, root);
 			triples = new LinkedList<Triple>();
@@ -52,15 +55,22 @@ public class FSTree {
 			f = new Leaf(1, x, null, null, triples, root.getLeftINL1());
 			return f;
 		}
+		//x already exists
 		if(f.getValue() == x)
 			return f;
+		
 		f.incCounter();
 		f.updateTriple();
-		newTriples = (LinkedList<Triple>) firstLeaf.getTriples().clone();
+		newTriples = (LinkedList<Triple>) f.getTriples().clone();
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
 		f.setNext(newLeaf);
+		upNode = f.getUpNode();
+		if(upNode.getRightDownNode() == f)
+			upNode.setRightDownNode(newLeaf);
+		upNode.incNumberOfDownNode();
+		upNode.split();
 		ancestor = f.getTriples().getFirst().getAncestor();
-		ancestor.split();
+		ancestor.split(this);
 		return newLeaf;
 	}
 	
@@ -69,37 +79,8 @@ public class FSTree {
 		
 	}
 	
-	public String print() {
-		if(root == null) 
-			return "empty tree";
-		return print(root);
+	public void paintImage() {
 		
-	}
-	public String print(Node node) {
-		InternalNode temp;
-		Leaf temp2;
-		String result = "|\n|";
-		if(node instanceof InternalNode) {
-			temp = (InternalNode)node;
-			while(temp != null) {
-				result += "--" +"pr("+ temp.getUpNode().toString() +")"+ temp.toString() + 
-						"ch(" + temp.getLeftINL1().toString() + ","
-						+ temp.getRightINL1().toString() + ")";
-				temp = temp.getNext();
-			}
-			result += "\n";
-			return result + print(node.getLeftINL1().getLeftDownNode());
-		}
-		temp2 = (Leaf) node;
-		while(temp2 != null) {
-			result += "**" + temp2.getValue() + "(" + temp2.getUpNode().toString() + 
-					")";
-			temp2 = temp2.getNext();
-		}
-		result += "\n";
-		return result;
-
-
 	}
 
 	public InternalNode getRoot() {

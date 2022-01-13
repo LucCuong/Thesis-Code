@@ -6,15 +6,14 @@ public class Leaf extends Node{
 	private Leaf prev;
 	private Leaf next;
 	private LinkedList<Triple> triples;
-	private IntermediateNodeLevel1 upNode;
 	public Leaf(int counter, int value, Leaf prev, Leaf next, LinkedList<Triple> triples,
 			IntermediateNodeLevel1 upNode) {
+		super(upNode, prev, next);
 		this.counter = counter;
 		this.value = value;
 		this.next = next;
 		this.prev = prev;
 		this.triples = triples;
-		this.upNode = upNode;
 	}
 
 
@@ -81,6 +80,7 @@ public class Leaf extends Node{
 	public Leaf getPrev() {
 		return prev;
 	}
+
 	public void setPrev(Leaf prev) {
 		this.prev = prev;
 	}
@@ -96,16 +96,6 @@ public class Leaf extends Node{
 	}
 	public void setValue(int value) {
 		this.value = value;
-	}
-
-
-	public IntermediateNodeLevel1 getUpNode() {
-		return upNode;
-	}
-
-
-	public void setUpNode(IntermediateNodeLevel1 upNode) {
-		this.upNode = upNode;
 	}
 	
 }

@@ -4,11 +4,12 @@ public class IntermediateNodeLevel1 {
 	private Node leftDownNode;
 	private Node rightDownNode;
 	private long numberOfDownNode;
-	public IntermediateNodeLevel1(InternalNode upNode, Leaf leftChild, Leaf rightChild, 
+	private IntermediateNodeLevel1 pair;
+	public IntermediateNodeLevel1(InternalNode upNode, Node leftDownNode, Node rightDownNode, 
 			long numberOfDownNode) {
 		this.upNode = upNode;
-		this.leftDownNode = leftChild;
-		this.rightDownNode = rightChild;
+		this.leftDownNode = leftDownNode;
+		this.rightDownNode = rightDownNode;
 		this.numberOfDownNode = numberOfDownNode;
 	}
 
@@ -18,7 +19,25 @@ public class IntermediateNodeLevel1 {
 		return false;
 	}
 	public void split() {
-		
+		if(numberOfDownNode > upNode.getDeltaD()) {
+			//the INL1 doesn't have a pair yet
+			if(pair == null) {
+				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(upNode, this.rightDownNode, null, 0);
+				this.pair = newINL1;
+				if(upNode.getRightINL1() == null)
+					upNode.setRightINL1(pair);
+				newINL1.setPair(this);
+			}else {
+				pair.setLeftDownNode(rightDownNode);
+			}
+			rightDownNode = rightDownNode.getPrev();
+			pair.incNumberOfDownNode();
+			numberOfDownNode--;
+			if(pair.getNumberOfDownNode() == upNode.getDeltaD()) {
+				pair.setPair(null);
+				this.pair = null;
+			}
+		}
 	}
 	public void incNumberOfDownNode() {
 		numberOfDownNode++;
@@ -55,5 +74,13 @@ public class IntermediateNodeLevel1 {
 		this.numberOfDownNode = numberOfDownNode;
 	}
 
+	public IntermediateNodeLevel1 getPair() {
+		return pair;
+	}
+
+	public void setPair(IntermediateNodeLevel1 pair) {
+		this.pair = pair;
+	}
+	
 	
 }

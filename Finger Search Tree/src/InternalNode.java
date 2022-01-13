@@ -3,16 +3,15 @@ public class InternalNode extends Node{
 	private int hight;
 	private long deltaD;
 	private IntermediateNodeLevel1 upNode;
-	private long numberOfDownNode;
 	private InternalNode next;
 	private InternalNode prev;
 	private IntermediateNodeLevel1 leftINL1;
 	private IntermediateNodeLevel1 rightINL1;
-	public InternalNode(int hight, IntermediateNodeLevel1 upNode, InternalNode next, 
-		InternalNode prev, IntermediateNodeLevel1 leftINL1, IntermediateNodeLevel1 rightINL1) {
+	public InternalNode(int hight, IntermediateNodeLevel1 upNode, InternalNode prev, 
+		InternalNode next, IntermediateNodeLevel1 leftINL1, IntermediateNodeLevel1 rightINL1) {
+		super(upNode, prev, next);
 		this.hight 		= hight;
 		this.deltaD 	= calculateDeltaD(hight);
-		this.upNode 	= upNode;
 		this.next 		= next;
 		this.prev 		= prev;
 		this.leftINL1 	= leftINL1;
@@ -21,21 +20,32 @@ public class InternalNode extends Node{
 	private long calculateDeltaD(int d) {
 		return (long) Math.pow(2, (long)Math.pow(2,d));
 	}
-	public void split() {
-		if(rightINL1 == null) {
-			if(leftINL1.toSplit())
-				leftINL1.split();
+	public void split(FSTree tree) {
+		if((rightINL1 != null) & (leftINL1.getPair()!=rightINL1)) {
+			InternalNode newIN = new InternalNode(this.hight, this.upNode, this, this.next, rightINL1, rightINL1.getPair());
+			//current node is the root
+			if(upNode == null) {
+				InternalNode newRoot = new InternalNode((this.hight + 1), null, null, null,null ,null);
+				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(newRoot, this, newIN, 2);
+				newRoot.setLeftINL1(newINL1);
+				this.upNode = newINL1;
+				newIN.setUpNode(newINL1);
+				tree.setRoot(newRoot);
+			}else {
+				if(this == upNode.getRightDownNode()) {
+					upNode.setRightDownNode(newIN);
+				}
+				upNode.incNumberOfDownNode();
+				upNode.split();
+			}
+			this.next = newIN;
+			this.rightINL1 = this.leftINL1.getPair();
 		}
-		if(rightINL1.toSplit() == true) {
-			rightINL1.split();
-		}
 	}
-	public void incNumberOfDownNode() {
-		numberOfDownNode++;
+	public void merge() {
+		
 	}
-	public void decNumberOfDownNode() {
-		numberOfDownNode--;
-	}
+
 	public int getHight() {
 		return hight;
 	}
@@ -53,12 +63,6 @@ public class InternalNode extends Node{
 	}
 	public void setUpNode(IntermediateNodeLevel1 upNode) {
 		this.upNode = upNode;
-	}
-	public long getNumberOfDownNode() {
-		return numberOfDownNode;
-	}
-	public void setNumberOfDownNode(long numberOfDownNode) {
-		this.numberOfDownNode = numberOfDownNode;
 	}
 	public InternalNode getNext() {
 		return next;
