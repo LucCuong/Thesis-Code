@@ -2,6 +2,8 @@ package Paint;
 
 import javax.swing.*;
 
+import Tree.FSTree;
+
 public class MyFrame extends JFrame {
 
 	/**
@@ -10,9 +12,9 @@ public class MyFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	MyPanel panel;
 
-	public MyFrame() {
+	public MyFrame(FSTree tree) {
 
-		panel = new MyPanel();
+		panel = new MyPanel(tree);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);

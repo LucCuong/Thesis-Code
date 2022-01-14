@@ -1,3 +1,5 @@
+package Tree;
+
 
 public class Triple {
 	private int i;

@@ -1,3 +1,5 @@
+package Tree;
+
 
 public class IntermediateNodeLevel1 {
 	private InternalNode upNode;
@@ -22,12 +24,14 @@ public class IntermediateNodeLevel1 {
 		if(numberOfDownNode > upNode.getDeltaD()) {
 			//the INL1 doesn't have a pair yet
 			if(pair == null) {
+				//create a new pair node and assign the new pair as rightmost INL1
 				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(upNode, this.rightDownNode, null, 0);
 				this.pair = newINL1;
-				if(upNode.getRightINL1() == null)
+				if(upNode.getRightINL1() == null || upNode.getRightINL1() == this)
 					upNode.setRightINL1(pair);
 				newINL1.setPair(this);
 			}else {
+				//the current INL1 already has a pair node
 				pair.setLeftDownNode(rightDownNode);
 			}
 			rightDownNode = rightDownNode.getPrev();
@@ -37,6 +41,11 @@ public class IntermediateNodeLevel1 {
 				pair.setPair(null);
 				this.pair = null;
 			}
+			return;
+		}
+		if(numberOfDownNode == upNode.getDeltaD()) {
+			this.pair.setPair(null);
+			this.pair = null;
 		}
 	}
 	public void incNumberOfDownNode() {

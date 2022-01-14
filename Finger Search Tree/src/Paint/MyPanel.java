@@ -3,6 +3,8 @@ package Paint;
 import java.awt.*;
 import javax.swing.*;
 
+import Tree.FSTree;
+
 public class MyPanel extends JPanel {
 
 	// Image image;
@@ -10,10 +12,11 @@ public class MyPanel extends JPanel {
 	/**
 	 * 
 	 */
+	private FSTree tree;
 	private static final long serialVersionUID = 1L;
 
-	public MyPanel() {
-
+	public MyPanel(FSTree tree) {
+		this.tree = tree;
 		// image = new ImageIcon("sky.png").getImage();
 		this.setPreferredSize(new Dimension(2000, 1500));
 	}

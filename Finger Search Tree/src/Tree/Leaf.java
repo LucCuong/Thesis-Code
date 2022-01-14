@@ -1,3 +1,5 @@
+package Tree;
+
 import java.util.LinkedList;
 
 public class Leaf extends Node{

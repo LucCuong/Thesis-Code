@@ -1,3 +1,5 @@
+package Tree;
+
 import java.lang.Math;
 public class InternalNode extends Node{
 	private int hight;
@@ -22,7 +24,12 @@ public class InternalNode extends Node{
 	}
 	public void split(FSTree tree) {
 		if((rightINL1 != null) & (leftINL1.getPair()!=rightINL1)) {
-			InternalNode newIN = new InternalNode(this.hight, this.upNode, this, this.next, rightINL1, rightINL1.getPair());
+			InternalNode newIN;
+			if(rightINL1.getPair() != null) {
+				newIN = new InternalNode(hight, upNode, this, next, rightINL1.getPair(), rightINL1);
+			}else {
+				newIN = new InternalNode(hight, upNode, this, next, rightINL1, null);
+			}
 			//current node is the root
 			if(upNode == null) {
 				InternalNode newRoot = new InternalNode((this.hight + 1), null, null, null,null ,null);
@@ -32,7 +39,7 @@ public class InternalNode extends Node{
 				newIN.setUpNode(newINL1);
 				tree.setRoot(newRoot);
 			}else {
-				if(this == upNode.getRightDownNode()) {
+				if((this == upNode.getRightDownNode()) || (upNode.getRightDownNode() == null)) {
 					upNode.setRightDownNode(newIN);
 				}
 				upNode.incNumberOfDownNode();

@@ -1,3 +1,5 @@
+package Tree;
+
 public class Node {
 	protected IntermediateNodeLevel1 upNode;
 	private Node prev;
