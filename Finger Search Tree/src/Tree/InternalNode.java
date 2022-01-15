@@ -4,6 +4,8 @@ import java.lang.Math;
 public class InternalNode extends Node{
 	private int hight;
 	private long deltaD;
+	private long gammaD;
+	private boolean dead;
 	private IntermediateNodeLevel1 upNode;
 	private InternalNode next;
 	private InternalNode prev;
@@ -14,13 +16,23 @@ public class InternalNode extends Node{
 		super(upNode, prev, next);
 		this.hight 		= hight;
 		this.deltaD 	= calculateDeltaD(hight);
+		this.gammaD 	= calculateGammaD(hight);
 		this.next 		= next;
 		this.prev 		= prev;
 		this.leftINL1 	= leftINL1;
 		this.rightINL1 	= rightINL1;
+		this.dead = false;
 	}
 	private long calculateDeltaD(int d) {
 		return (long) Math.pow(2, (long)Math.pow(2,d));
+	}
+	private long calculateGammaD(int d) {
+		long result;
+		long power2d1 = (long) Math.pow(2, (d-1));
+		long power1 = 3 * (d-1) * power2d1;
+		long power2 = (long) Math.pow(2, d) + power2d1 -2;
+		result = (long) Math.pow(2, power1) * (long) Math.pow(2, power2);
+		return result;
 	}
 	public void split(FSTree tree) {
 		if((rightINL1 != null) & (leftINL1.getPair()!=rightINL1)) {
@@ -94,6 +106,18 @@ public class InternalNode extends Node{
 	}
 	public void setRightINL1(IntermediateNodeLevel1 rightINL1) {
 		this.rightINL1 = rightINL1;
+	}
+	public boolean isDead() {
+		return dead;
+	}
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+	public long getThetaD() {
+		return gammaD;
+	}
+	public void setThetaD(long thetaD) {
+		this.gammaD = thetaD;
 	}
 
 
