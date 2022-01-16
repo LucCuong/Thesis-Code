@@ -9,18 +9,18 @@ public class InternalNode extends Node{
 	private IntermediateNodeLevel1 upNode;
 	private InternalNode next;
 	private InternalNode prev;
-	private IntermediateNodeLevel1 leftINL1;
-	private IntermediateNodeLevel1 rightINL1;
+	private IntermediateNodeLevel2 leftINL2;
+	private IntermediateNodeLevel2 rightINL2;
 	public InternalNode(int hight, IntermediateNodeLevel1 upNode, InternalNode prev, 
-		InternalNode next, IntermediateNodeLevel1 leftINL1, IntermediateNodeLevel1 rightINL1) {
+		InternalNode next, IntermediateNodeLevel2 leftINL2, IntermediateNodeLevel2 rightINL2) {
 		super(upNode, prev, next);
 		this.hight 		= hight;
 		this.deltaD 	= calculateDeltaD(hight);
 		this.gammaD 	= calculateGammaD(hight);
 		this.next 		= next;
 		this.prev 		= prev;
-		this.leftINL1 	= leftINL1;
-		this.rightINL1 	= rightINL1;
+		this.leftINL2 	= leftINL2;
+		this.rightINL2 	= rightINL2;
 		this.dead = false;
 	}
 	private long calculateDeltaD(int d) {
@@ -35,30 +35,33 @@ public class InternalNode extends Node{
 		return result;
 	}
 	public void split(FSTree tree) {
-		if((rightINL1 != null) & (leftINL1.getPair()!=rightINL1)) {
+		if((rightINL2 != null) & (leftINL2.getPair()!=rightINL2)) {
 			InternalNode newIN;
-			if(rightINL1.getPair() != null) {
-				newIN = new InternalNode(hight, upNode, this, next, rightINL1.getPair(), rightINL1);
+			if(rightINL2.getPair() != null) {
+				newIN = new InternalNode(hight, upNode, this, next, rightINL2.getPair(), rightINL2);
 			}else {
-				newIN = new InternalNode(hight, upNode, this, next, rightINL1, null);
+				newIN = new InternalNode(hight, upNode, this, next, rightINL2, null);
 			}
 			//current node is the root
 			if(upNode == null) {
 				InternalNode newRoot = new InternalNode((this.hight + 1), null, null, null,null ,null);
-				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(newRoot, this, newIN, 2);
-				newRoot.setLeftINL1(newINL1);
+				IntermediateNodeLevel2 newINL2 = new IntermediateNodeLevel2(newRoot,null, null);
+				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(newINL2, this, newIN);
+				newINL1.setNumberOfDownNode(2);
+				newINL2.setLeftINL1(newINL1);
+				newRoot.setLeftINL2(newINL2);
 				this.upNode = newINL1;
 				newIN.setUpNode(newINL1);
 				tree.setRoot(newRoot);
 			}else {
-				if((this == upNode.getRightDownNode()) || (upNode.getRightDownNode() == null)) {
-					upNode.setRightDownNode(newIN);
+				if((this == upNode.getRightMost()) || (upNode.getRightMost() == null)) {
+					upNode.setRightMost(newIN);
 				}
 				upNode.incNumberOfDownNode();
 				upNode.split();
 			}
 			this.next = newIN;
-			this.rightINL1 = this.leftINL1.getPair();
+			this.rightINL2 = this.leftINL2.getPair();
 		}
 	}
 	public void merge() {
@@ -95,29 +98,29 @@ public class InternalNode extends Node{
 	public void setPrev(InternalNode prev) {
 		this.prev = prev;
 	}
-	public IntermediateNodeLevel1 getLeftINL1() {
-		return leftINL1;
+	public long getGammaD() {
+		return gammaD;
 	}
-	public void setLeftINL1(IntermediateNodeLevel1 leftINL1) {
-		this.leftINL1 = leftINL1;
+	public void setGammaD(long gammaD) {
+		this.gammaD = gammaD;
 	}
-	public IntermediateNodeLevel1 getRightINL1() {
-		return rightINL1;
+	public IntermediateNodeLevel2 getLeftINL2() {
+		return leftINL2;
 	}
-	public void setRightINL1(IntermediateNodeLevel1 rightINL1) {
-		this.rightINL1 = rightINL1;
+	public void setLeftINL2(IntermediateNodeLevel2 leftINL2) {
+		this.leftINL2 = leftINL2;
+	}
+	public IntermediateNodeLevel2 getRightINL2() {
+		return rightINL2;
+	}
+	public void setRightINL2(IntermediateNodeLevel2 rightINL2) {
+		this.rightINL2 = rightINL2;
 	}
 	public boolean isDead() {
 		return dead;
 	}
 	public void setDead(boolean dead) {
 		this.dead = dead;
-	}
-	public long getThetaD() {
-		return gammaD;
-	}
-	public void setThetaD(long thetaD) {
-		this.gammaD = thetaD;
 	}
 
 

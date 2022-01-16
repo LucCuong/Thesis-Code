@@ -8,9 +8,11 @@ public class FSTree {
 	public FSTree() {
 		root = new InternalNode(1, null, null, null, null, null);
 		firstLeaf = null;
-		IntermediateNodeLevel1 firstINL1 = new IntermediateNodeLevel1(root, firstLeaf, 
-				null, 0);
-		root.setLeftINL1(firstINL1);
+		IntermediateNodeLevel2 firstINL2 = new IntermediateNodeLevel2(root, null, null);
+		IntermediateNodeLevel1 firstINL1 = new IntermediateNodeLevel1(firstINL2, firstLeaf, 
+				null);
+		firstINL2.setLeftINL1(firstINL1);
+		root.setLeftINL2(firstINL2);
 	}
 	
 	//TODO
@@ -54,7 +56,7 @@ public class FSTree {
 			Triple firstTriple = new Triple(0, 0, root);
 			triples = new LinkedList<Triple>();
 			triples.add(firstTriple);
-			f = new Leaf(1, x, null, null, triples, root.getLeftINL1());
+			f = new Leaf(1, x, null, null, triples, root.getLeftINL2().getLeftINL1());
 			return f;
 		}
 		//x already exists
@@ -67,10 +69,11 @@ public class FSTree {
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
 		f.setNext(newLeaf);
 		upNode = f.getUpNode();
-		if(upNode.getRightDownNode() == f)
-			upNode.setRightDownNode(newLeaf);
+		if(upNode.getRightMost() == f)
+			upNode.setRightMost(newLeaf);
 		upNode.incNumberOfDownNode();
 		upNode.split();
+		upNode.getUpNode().split();
 		ancestor = f.getTriples().getFirst().getAncestor();
 		ancestor.split(this);
 		return newLeaf;
