@@ -4,19 +4,61 @@ package Tree;
 public class IntermediateNodeLevel2 {
 	private InternalNode upNode;
 	private long numberOfDownNode;
+	private IntermediateNodeLevel2 prev;
+	private IntermediateNodeLevel2 next;
 	private IntermediateNodeLevel1 leftINL1;
 	private IntermediateNodeLevel1 rightINL1;
 	private IntermediateNodeLevel2 pair;
 
-	public IntermediateNodeLevel2(InternalNode upNode, IntermediateNodeLevel1 leftINL1,
-			IntermediateNodeLevel1 rightINL1) {
+	public IntermediateNodeLevel2(InternalNode upNode, IntermediateNodeLevel2 prev, IntermediateNodeLevel2 next, IntermediateNodeLevel1 leftINL1, IntermediateNodeLevel1 rightINL1) {
 		this.upNode = upNode;
+		this.prev = prev;
+		this.next = next;
 		this.leftINL1 = leftINL1;
 		this.rightINL1 = rightINL1;
 		this.numberOfDownNode = 1;
 	}
 	public void split() {
-		
+		long gammaD = upNode.getGammaD();
+		if(numberOfDownNode > gammaD) {
+			//the INL2 doesn't have a pair yet
+			if(pair == null) {
+				//create a new pair node and assign the new pair as rightmost INL2
+				IntermediateNodeLevel2 newINL2 = new IntermediateNodeLevel2(upNode, this, this.next, this.rightINL1, this.rightINL1);
+				next = newINL2;
+				pair = newINL2;
+				newINL2.setPair(this);
+				pair.incNumberOfDownNode();
+			}else {
+				//the current INL2 node already has a pair node
+				pair.setLeftINL1(rightINL1);
+				pair.incNumberOfDownNode();
+				if(pair.getNumberOfDownNode() == gammaD) {
+					pair.setPair(null);
+					pair = null;
+					if(upNode.getRightINL2() == this)
+						upNode.setRightINL2(next);
+				}
+			}
+			rightINL1 = rightINL1.getPrev();
+			numberOfDownNode--;
+			return;
+		}
+		if(numberOfDownNode == gammaD) {
+			if(pair != null) {
+				pair.setPair(null);
+				pair = null;
+				if(upNode.getRightINL2() == prev)
+					upNode.setRightINL2(this);
+			}
+
+		}
+	}
+	public void incNumberOfDownNode() {
+		numberOfDownNode++;
+	}
+	public void decNumberOfDownNode() {
+		numberOfDownNode--;
 	}
 	public InternalNode getUpNode() {
 		return upNode;
@@ -47,6 +89,18 @@ public class IntermediateNodeLevel2 {
 	}
 	public void setPair(IntermediateNodeLevel2 pair) {
 		this.pair = pair;
+	}
+	public IntermediateNodeLevel2 getPrev() {
+		return prev;
+	}
+	public void setPrev(IntermediateNodeLevel2 prev) {
+		this.prev = prev;
+	}
+	public IntermediateNodeLevel2 getNext() {
+		return next;
+	}
+	public void setNext(IntermediateNodeLevel2 next) {
+		this.next = next;
 	}
 	
 }

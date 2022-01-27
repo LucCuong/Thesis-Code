@@ -7,12 +7,15 @@ public class FSTree {
 	private Leaf firstLeaf;
 	public FSTree() {
 		root = new InternalNode(1, null, null, null, null, null);
-		firstLeaf = null;
-		IntermediateNodeLevel2 firstINL2 = new IntermediateNodeLevel2(root, null, null);
-		IntermediateNodeLevel1 firstINL1 = new IntermediateNodeLevel1(firstINL2, firstLeaf, 
-				null);
+		LinkedList<Triple> triples = new LinkedList<Triple>();
+		firstLeaf = new Leaf(0, -1, null, null, triples, null);
+		IntermediateNodeLevel2 firstINL2 = new IntermediateNodeLevel2(root, null, null, null, null);
+		IntermediateNodeLevel1 firstINL1 = new IntermediateNodeLevel1(firstINL2, null, null, firstLeaf, firstLeaf);
+		firstLeaf.setUpNode(firstINL1);
 		firstINL2.setLeftINL1(firstINL1);
+		firstINL2.setRightINL1(firstINL1);
 		root.setLeftINL2(firstINL2);
+		root.setRightINL2(firstINL2);
 	}
 	
 	//TODO
@@ -47,18 +50,10 @@ public class FSTree {
 	//TODO
 	@SuppressWarnings("unchecked")
 	public Leaf insert(Leaf f, int x) {
-		LinkedList<Triple> triples;
 		LinkedList<Triple> newTriples;
 		InternalNode ancestor;
 		IntermediateNodeLevel1 upNode;
-		//empty tree
-		if(f == null) {
-			Triple firstTriple = new Triple(0, 0, root);
-			triples = new LinkedList<Triple>();
-			triples.add(firstTriple);
-			f = new Leaf(1, x, null, null, triples, root.getLeftINL2().getLeftINL1());
-			return f;
-		}
+		
 		//x already exists
 		if(f.getValue() == x)
 			return f;
@@ -73,7 +68,6 @@ public class FSTree {
 			upNode.setRightMost(newLeaf);
 		upNode.incNumberOfDownNode();
 		upNode.split();
-		upNode.getUpNode().split();
 		ancestor = f.getTriples().getFirst().getAncestor();
 		ancestor.split(this);
 		return newLeaf;

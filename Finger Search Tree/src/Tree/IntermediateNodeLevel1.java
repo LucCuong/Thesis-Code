@@ -6,9 +6,13 @@ public class IntermediateNodeLevel1 {
 	private Node leftMost;
 	private Node rightMost;
 	private long numberOfDownNode;
+	private IntermediateNodeLevel1 prev;
+	private IntermediateNodeLevel1 next;
 	private IntermediateNodeLevel1 pair;
-	public IntermediateNodeLevel1(IntermediateNodeLevel2 upNode, Node leftMost, Node rightMost) {
+	public IntermediateNodeLevel1(IntermediateNodeLevel2 upNode,IntermediateNodeLevel1 prev, IntermediateNodeLevel1 next, Node leftMost, Node rightMost) {
 		this.upNode = upNode;
+		this.prev = prev;
+		this.next = next;
 		this.leftMost = leftMost;
 		this.rightMost = rightMost;
 		this.numberOfDownNode = 0;
@@ -21,31 +25,43 @@ public class IntermediateNodeLevel1 {
 	}
 	//TODO
 	public void split() {
-		if(numberOfDownNode > upNode.getUpNode().getDeltaD()) {
+		long deltaD = upNode.getUpNode().getDeltaD();
+		if(numberOfDownNode > deltaD) {
 			//the INL1 doesn't have a pair yet
 			if(pair == null) {
 				//create a new pair node and assign the new pair as rightmost INL1
-				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(upNode, this.rightMost, null);
-				this.pair = newINL1;
-				if(upNode.getRightINL1() == null || upNode.getRightINL1() == this)
-					upNode.setRightINL1(pair);
+				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(upNode, this, this.next, this.rightMost, this.rightMost);
+				next = newINL1;
+				pair = newINL1;
 				newINL1.setPair(this);
+				pair.incNumberOfDownNode();
 			}else {
 				//the current INL1 already has a pair node
 				pair.setLeftMost(rightMost);
+				pair.incNumberOfDownNode();
+				if(pair.getNumberOfDownNode() == deltaD) {
+					pair.setPair(null);
+					pair = null;
+					upNode.incNumberOfDownNode();
+					if(upNode.getRightINL1() == this)
+						upNode.setRightINL1(next);
+				}
 			}
 			rightMost = rightMost.getPrev();
-			pair.incNumberOfDownNode();
 			numberOfDownNode--;
-			if(pair.getNumberOfDownNode() == upNode.getUpNode().getDeltaD()) {
-				pair.setPair(null);
-				this.pair = null;
-			}
+			upNode.split();
 			return;
 		}
-		if(numberOfDownNode == upNode.getUpNode().getDeltaD()) {
-			this.pair.setPair(null);
-			this.pair = null;
+		if(numberOfDownNode == deltaD) {
+			if(pair != null) {
+				pair.setPair(null);
+				pair = null;
+				upNode.incNumberOfDownNode();
+				if(upNode.getRightINL1() == prev)
+					upNode.setRightINL1(this);
+				upNode.split();
+			}
+
 		}
 	}
 	public void incNumberOfDownNode() {
@@ -92,6 +108,22 @@ public class IntermediateNodeLevel1 {
 
 	public void setPair(IntermediateNodeLevel1 pair) {
 		this.pair = pair;
+	}
+
+	public IntermediateNodeLevel1 getPrev() {
+		return prev;
+	}
+
+	public void setPrev(IntermediateNodeLevel1 prev) {
+		this.prev = prev;
+	}
+
+	public IntermediateNodeLevel1 getNext() {
+		return next;
+	}
+
+	public void setNext(IntermediateNodeLevel1 next) {
+		this.next = next;
 	}
 	
 	
