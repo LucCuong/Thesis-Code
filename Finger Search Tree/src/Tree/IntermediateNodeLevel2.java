@@ -55,8 +55,117 @@ public class IntermediateNodeLevel2 {
 		}
 	}
 	
-	public void fuse() {
-		
+	public void fuse(FSTree tree) {
+		// TODO: check the prev and next before using => null pointer
+		if (numberOfDownNode == (gammaD - 1)) {
+			// Move a child from the pair node to this node
+			if (pair != null) {
+				this.setRightINL1(rightINL1.getNext());
+				pair.setLeftINL1(this.rightINL1.getNext());
+				numberOfDownNode++;
+				pair.decNumberOfDownNode();
+
+				// Pair node has no child
+				if (pair.getNumberOfDownNode() == 0) {
+					IntermediateNodeLevel2 newNext = pair.getNext();
+					if (newNext != null) {
+						newNext.setPrev(this);
+						this.next = newNext;
+						pair.setPair(null);
+						this.pair = null;
+					} else
+						next = null;
+					return;
+				}
+			}
+			// The current node doesn't have a pair node
+			else {
+				// The previous node has a pair node
+				// => move one child from previous node to the current node
+				if ((prev != null) && (prev.getPair() != null)) {
+					leftINL1 = leftINL1.getPrev();
+					prev.decNumberOfDownNode();
+					numberOfDownNode++;
+
+					// The previous node has no child => delete it
+					if (prev.getNumberOfDownNode() == 0) {
+						IntermediateNodeLevel2 newPrev = prev.getPrev();
+						newPrev.setNext(this);
+						prev = newPrev;
+						return;
+					}
+					prev.setRightINL1(leftINL1.getPrev());
+					return;
+				}
+				// Check the right neighbor node similarly
+				// The next neighbor has a pair node
+				// => move one child from the next neighbor to this node
+				if ((next != null) && (next.pair != null)) {
+					IntermediateNodeLevel2 pairOfNext = next.getPair();
+					rightINL1 = rightINL1.getNext();
+					numberOfDownNode++;
+					next.setLeftINL1(rightINL1.getNext());
+					next.setRightINL1(pairOfNext.getLeftINL1());
+					pairOfNext.decNumberOfDownNode();
+
+					// The pair node of the next node has no child
+					if (pairOfNext.getNumberOfDownNode() == 0) {
+						IntermediateNodeLevel2 newNext = pair.getNext();
+						newNext.setPrev(next);
+						next.setNext(newNext);
+						return;
+					}
+					pairOfNext.setLeftINL1(pairOfNext.getLeftINL1().getNext());
+					return;
+				}
+				// The previous node doesn't have a pair node
+				// => fuse this node with the previous node
+				if (prev != null) {
+					prev.setPair(this);
+					pair = prev;
+					// Two nodes don't have the same up node
+					if (prev.getUpNode() != upNode) {
+						InternalNode oldUpNode = this.upNode;
+						this.upNode = prev.getUpNode();
+						oldUpNode.decNumberOfDownNode();
+						if (oldUpNode.getNumberOfDownNode() > 0) {
+							if (this == oldUpNode.getLeftINL1())
+								oldUpNode.setLeftINL1(next);
+						}
+						oldUpNode.fuse(tree);
+						return;
+					}
+					// Change the leftINL1 or rightINL1 of the upNode if necessary
+					if (this == upNode.getRightINL1())
+						upNode.setRightINL1(prev);
+					upNode.decNumberOfDownNode();
+					upNode.fuse(tree);
+				}
+				// The previous node is null
+				if (next != null) {
+					next.setPair(this);
+					pair = next;
+					// Move one child from the next node to this node
+					this.rightMost = next.getLeftMost();
+					next.setLeftMost(leftMost.getNext());
+					numberOfDownNode++;
+					next.decNumberOfDownNode();
+					upNode.decNumberOfDownNode();
+					upNode.fuse(tree);
+				}
+			}
+		}
+
+		// The current node has no child
+		if (numberOfDownNode == 0)
+			// The current node has a pair node
+			if(pair != null) {
+				pair.setNext(next);
+				next.setPrev(prev);
+				pair.setPair(null);
+				pair = null;
+				return;
+			}
 	}
 	
 	private long GammaD(int d) {

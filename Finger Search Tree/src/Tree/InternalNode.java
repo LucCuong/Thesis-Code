@@ -51,7 +51,7 @@ public class InternalNode extends Node {
 			}
 	}
 
-	public void delete() {
+	public void delete(FSTree tree) {
 
 	}
 

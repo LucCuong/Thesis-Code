@@ -42,7 +42,6 @@ public class FSTree {
 		return null;
 	}
 
-	// TODO
 	@SuppressWarnings("unchecked")
 	public Leaf insert(Leaf f, int x) {
 		LinkedList<Triple> newTriples;
@@ -68,7 +67,6 @@ public class FSTree {
 		return newLeaf;
 	}
 
-	// TODO
 	public void delete(Leaf f) {
 		IntermediateNodeLevel1 upNode = f.getUpNode();
 		Leaf prev = f.getPrev();
@@ -87,7 +85,7 @@ public class FSTree {
 		}
 
 		upNode.decNumberOfDownNode();
-		upNode.fuse();
+		upNode.fuse(this);
 	}
 
 	public void paintImage() {

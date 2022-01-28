@@ -21,7 +21,6 @@ public class IntermediateNodeLevel1 {
 		this.deltaD = DeltaD(upNode.getUpNode().getHight());
 	}
 
-	// TODO
 	public void split() {
 		if (numberOfDownNode > deltaD) {
 			// the INL1 doesn't have a pair yet
@@ -63,36 +62,117 @@ public class IntermediateNodeLevel1 {
 		}
 	}
 
-	public void fuse() {
+	public void fuse(FSTree tree) {
+		// TODO: check the prev and next before using => null pointer
 		if (numberOfDownNode == (deltaD - 1)) {
-			
 			// Move a child from the pair node to this node
 			if (pair != null) {
 				this.setRightMost(rightMost.getNext());
 				pair.setLeftMost(this.rightMost.getNext());
 				numberOfDownNode++;
 				pair.decNumberOfDownNode();
-				
+
 				// Pair node has no child
-				if(pair.getNumberOfDownNode() == 0) {
-					IntermediateNodeLevel1 next = pair.getNext();
-					next.setPrev(this);
-					this.next = next;
-					pair.setPair(null);
-					this.pair = null;
+				if (pair.getNumberOfDownNode() == 0) {
+					IntermediateNodeLevel1 newNext = pair.getNext();
+					if (newNext != null) {
+						newNext.setPrev(this);
+						this.next = newNext;
+						pair.setPair(null);
+						this.pair = null;
+					} else
+						next = null;
 					return;
 				}
-			}else {
-				// The current node doesn't have a pair node
-				
-				upNode.fuse();
+			}
+			// The current node doesn't have a pair node
+			else {
+				// The previous node has a pair node
+				// => move one child from previous node to the current node
+				if ((prev != null) && (prev.getPair() != null)) {
+					leftMost = leftMost.getPrev();
+					prev.decNumberOfDownNode();
+					numberOfDownNode++;
+
+					// The previous node has no child => delete it
+					if (prev.getNumberOfDownNode() == 0) {
+						IntermediateNodeLevel1 newPrev = prev.getPrev();
+						newPrev.setNext(this);
+						prev = newPrev;
+						return;
+					}
+					prev.setRightMost(leftMost.getPrev());
+					return;
+				}
+				// Check the right neighbor node similarly
+				// The next neighbor has a pair node
+				// => move one child from the next neighbor to this node
+				if ((next != null) && (next.pair != null)) {
+					IntermediateNodeLevel1 pairOfNext = next.getPair();
+					rightMost = rightMost.getNext();
+					numberOfDownNode++;
+					next.setLeftMost(rightMost.getNext());
+					next.setRightMost(pairOfNext.getLeftMost());
+					pairOfNext.decNumberOfDownNode();
+
+					// The pair node of the next node has no child
+					if (pairOfNext.getNumberOfDownNode() == 0) {
+						IntermediateNodeLevel1 newNext = pair.getNext();
+						newNext.setPrev(next);
+						next.setNext(newNext);
+						return;
+					}
+					pairOfNext.setLeftMost(pairOfNext.getLeftMost().getNext());
+					return;
+				}
+				// The previous node doesn't have a pair node
+				// => fuse this node with the previous node
+				if (prev != null) {
+					prev.setPair(this);
+					pair = prev;
+					// Two nodes don't have the same up node
+					if (prev.getUpNode() != upNode) {
+						IntermediateNodeLevel2 oldUpNode = this.upNode;
+						this.upNode = prev.getUpNode();
+						oldUpNode.decNumberOfDownNode();
+						if (oldUpNode.getNumberOfDownNode() > 0) {
+							if (this == oldUpNode.getLeftINL1())
+								oldUpNode.setLeftINL1(next);
+						}
+						oldUpNode.fuse(tree);
+						return;
+					}
+					// Change the leftINL1 or rightINL1 of the upNode if necessary
+					if (this == upNode.getRightINL1())
+						upNode.setRightINL1(prev);
+					upNode.decNumberOfDownNode();
+					upNode.fuse(tree);
+				}
+				// The previous node is null
+				if (next != null) {
+					next.setPair(this);
+					pair = next;
+					// Move one child from the next node to this node
+					this.rightMost = next.getLeftMost();
+					next.setLeftMost(leftMost.getNext());
+					numberOfDownNode++;
+					next.decNumberOfDownNode();
+					upNode.decNumberOfDownNode();
+					upNode.fuse(tree);
+				}
 			}
 		}
-		
-		// The current node has no child
-		if(numberOfDownNode == 0)
 
-		upNode.fuse();
+		// The current node has no child
+		if (numberOfDownNode == 0)
+			// The current node has a pair node
+			if(pair != null) {
+				pair.setNext(next);
+				next.setPrev(prev);
+				pair.setPair(null);
+				pair = null;
+				return;
+			}
 	}
 
 	public long DeltaD(int d) {
