@@ -3,6 +3,7 @@ package Tree;
 
 public class IntermediateNodeLevel2 {
 	private InternalNode upNode;
+	private long gammaD;
 	private long numberOfDownNode;
 	private IntermediateNodeLevel2 prev;
 	private IntermediateNodeLevel2 next;
@@ -17,9 +18,9 @@ public class IntermediateNodeLevel2 {
 		this.leftINL1 = leftINL1;
 		this.rightINL1 = rightINL1;
 		this.numberOfDownNode = 1;
+		this.gammaD = GammaD(upNode.getHight());
 	}
 	public void split() {
-		long gammaD = upNode.getGammaD();
 		if(numberOfDownNode > gammaD) {
 			//the INL2 doesn't have a pair yet
 			if(pair == null) {
@@ -51,8 +52,20 @@ public class IntermediateNodeLevel2 {
 				if(upNode.getRightINL2() == prev)
 					upNode.setRightINL2(this);
 			}
-
 		}
+	}
+	
+	public void fuse() {
+		
+	}
+	
+	private long GammaD(int d) {
+		long result;
+		long power2d1 = (long) Math.pow(2, (d - 1));
+		long power1 = 3 * (d - 1) * power2d1;
+		long power2 = (long) Math.pow(2, d) + power2d1 - 2;
+		result = (long) Math.pow(2, power1) * (long) Math.pow(2, power2);
+		return result;
 	}
 	public void incNumberOfDownNode() {
 		numberOfDownNode++;
@@ -101,6 +114,9 @@ public class IntermediateNodeLevel2 {
 	}
 	public void setNext(IntermediateNodeLevel2 next) {
 		this.next = next;
+	}
+	public long getGammaD() {
+		return gammaD;
 	}
 	
 }

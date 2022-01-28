@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class FSTree {
 	private InternalNode root;
 	private Leaf firstLeaf;
+
 	public FSTree() {
 		root = new InternalNode(1, null, null, null, null, null);
 		LinkedList<Triple> triples = new LinkedList<Triple>();
@@ -17,54 +18,48 @@ public class FSTree {
 		root.setLeftINL2(firstINL2);
 		root.setRightINL2(firstINL2);
 	}
-	
-	//TODO
+
+	// TODO
 	public Leaf search(Leaf f, int x) {
 		Leaf temp;
-		if(f.getValue() == x)
+		if (f.getValue() == x)
 			return f;
 		temp = f.getPrev();
-		//check the left leaf of l
-		if(temp != null) {
+		// check the left leaf of l
+		if (temp != null) {
 			if (temp.getValue() == x)
 				return temp;
 		}
 		temp = f.getNext();
-		//check the right leaf of l
-		if(temp != null) {
-			if(temp.getValue() == x)
+		// check the right leaf of l
+		if (temp != null) {
+			if (temp.getValue() == x)
 				return temp;
 		}
-		if(f.getValue() < x) {
-			
+		if (f.getValue() < x) {
+
 		}
 		return null;
 	}
-	
-	public Leaf search(Leaf f, int x, boolean direction, boolean lastDirection) {
-		
-		
-		return null;
-	}
-	
-	//TODO
+
+	// TODO
 	@SuppressWarnings("unchecked")
 	public Leaf insert(Leaf f, int x) {
 		LinkedList<Triple> newTriples;
 		InternalNode ancestor;
 		IntermediateNodeLevel1 upNode;
-		
-		//x already exists
-		if(f.getValue() == x)
+
+		// x already exists
+		if (f.getValue() == x)
 			return f;
-		
+
 		f.incCounter();
 		f.updateTriple();
 		newTriples = (LinkedList<Triple>) f.getTriples().clone();
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
 		f.setNext(newLeaf);
 		upNode = f.getUpNode();
-		if(upNode.getRightMost() == f)
+		if (upNode.getRightMost() == f)
 			upNode.setRightMost(newLeaf);
 		upNode.incNumberOfDownNode();
 		upNode.split();
@@ -72,30 +67,47 @@ public class FSTree {
 		ancestor.split(this);
 		return newLeaf;
 	}
-	
-	//TODO
+
+	// TODO
 	public void delete(Leaf f) {
-		
+		IntermediateNodeLevel1 upNode = f.getUpNode();
+		Leaf prev = f.getPrev();
+		Leaf next = f.getNext();
+
+		// Remove the leaf from the double linked list
+		prev.setNext(next);
+		next.setPrev(prev);
+
+		// Change the leftmost or rightmost child of the upNode if necessary
+		if (upNode.getNumberOfDownNode() > 1) {
+			if (f == upNode.getLeftMost())
+				upNode.setLeftMost(next);
+			if (f == upNode.getRightMost())
+				upNode.setRightMost(prev);
+		}
+
+		upNode.decNumberOfDownNode();
+		upNode.fuse();
 	}
-	
+
 	public void paintImage() {
-		
+
 	}
 
 	public InternalNode getRoot() {
 		return root;
 	}
-	
+
 	public void setRoot(InternalNode root) {
 		this.root = root;
 	}
-	
+
 	public Leaf getFirstLeaf() {
 		return firstLeaf;
 	}
-	
+
 	public void setFirstLeaf(Leaf firstLeaf) {
 		this.firstLeaf = firstLeaf;
 	}
-	
+
 }

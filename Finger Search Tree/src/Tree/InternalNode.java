@@ -1,10 +1,8 @@
 package Tree;
 
-import java.lang.Math;
 
 public class InternalNode extends Node {
 	private int height;
-	private long deltaD;
 	private long gammaD;
 	private boolean dead;
 	private IntermediateNodeLevel1 upNode;
@@ -17,8 +15,6 @@ public class InternalNode extends Node {
 			IntermediateNodeLevel2 leftINL2, IntermediateNodeLevel2 rightINL2) {
 		super(upNode, prev, next);
 		this.height = height;
-		this.deltaD = DeltaD(height);
-		this.gammaD = GammaD(height);
 		this.next = next;
 		this.prev = prev;
 		this.leftINL2 = leftINL2;
@@ -26,26 +22,9 @@ public class InternalNode extends Node {
 		this.dead = false;
 	}
 
-	public long DeltaD(int d) {
-		long result = 2;
-		for (int i = 1; i < height; i++) {
-			result = (long) Math.pow(2, result);
-		}
-		return result;
-	}
-
-	private long GammaD(int d) {
-		long result;
-		long power2d1 = (long) Math.pow(2, (d - 1));
-		long power1 = 3 * (d - 1) * power2d1;
-		long power2 = (long) Math.pow(2, d) + power2d1 - 2;
-		result = (long) Math.pow(2, power1) * (long) Math.pow(2, power2);
-		return result;
-	}
-
 	public void split(FSTree tree) {
 		if (dead == false)
-			if ((rightINL2 != null) & (leftINL2.getPair() != rightINL2)) {
+			if ((leftINL2.getPair() != rightINL2) && (leftINL2 != rightINL2)) {
 				InternalNode newIN;
 				newIN = new InternalNode(height, upNode, this, next, rightINL2, rightINL2);
 				next = newIN;
@@ -72,7 +51,7 @@ public class InternalNode extends Node {
 			}
 	}
 
-	public void merge() {
+	public void delete() {
 
 	}
 
@@ -82,14 +61,6 @@ public class InternalNode extends Node {
 
 	public void setHight(int hight) {
 		this.height = hight;
-	}
-
-	public long getDeltaD() {
-		return deltaD;
-	}
-
-	public void setDeltaD(long deltaD) {
-		this.deltaD = deltaD;
 	}
 
 	public IntermediateNodeLevel1 getUpNode() {
