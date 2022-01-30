@@ -56,12 +56,12 @@ public class IntermediateNodeLevel2 {
 	}
 	
 	public void fuse(FSTree tree) {
-		// TODO: check the prev and next before using => null pointer
 		if (numberOfDownNode == (gammaD - 1)) {
 			// Move a child from the pair node to this node
 			if (pair != null) {
 				this.setRightINL1(rightINL1.getNext());
 				pair.setLeftINL1(this.rightINL1.getNext());
+				rightINL1.setUpNode(this);
 				numberOfDownNode++;
 				pair.decNumberOfDownNode();
 
@@ -84,12 +84,15 @@ public class IntermediateNodeLevel2 {
 				// => move one child from previous node to the current node
 				if ((prev != null) && (prev.getPair() != null)) {
 					leftINL1 = leftINL1.getPrev();
+					leftINL1.setUpNode(this);
 					prev.decNumberOfDownNode();
 					numberOfDownNode++;
 
-					// The previous node has no child => delete it
+					// The previous node has no child => delete it and unlink it with its pair node
 					if (prev.getNumberOfDownNode() == 0) {
 						IntermediateNodeLevel2 newPrev = prev.getPrev();
+						newPrev.setPair(null);
+						prev.setPair(null);
 						newPrev.setNext(this);
 						prev = newPrev;
 						return;
@@ -103,15 +106,21 @@ public class IntermediateNodeLevel2 {
 				if ((next != null) && (next.pair != null)) {
 					IntermediateNodeLevel2 pairOfNext = next.getPair();
 					rightINL1 = rightINL1.getNext();
+					rightINL1.setUpNode(this);
 					numberOfDownNode++;
 					next.setLeftINL1(rightINL1.getNext());
 					next.setRightINL1(pairOfNext.getLeftINL1());
+					next.getRightINL1().setUpNode(next);
 					pairOfNext.decNumberOfDownNode();
 
 					// The pair node of the next node has no child
+					// => remove it and unlink it with the next node
 					if (pairOfNext.getNumberOfDownNode() == 0) {
-						IntermediateNodeLevel2 newNext = pair.getNext();
-						newNext.setPrev(next);
+						IntermediateNodeLevel2 newNext = pairOfNext.getNext();
+						pairOfNext.setPair(null);
+						next.setPair(null);
+						if(newNext != null)
+							newNext.setPrev(next);
 						next.setNext(newNext);
 						return;
 					}
@@ -127,31 +136,60 @@ public class IntermediateNodeLevel2 {
 					if (prev.getUpNode() != upNode) {
 						InternalNode oldUpNode = this.upNode;
 						this.upNode = prev.getUpNode();
-						oldUpNode.decNumberOfDownNode();
-						if (oldUpNode.getNumberOfDownNode() > 0) {
-							if (this == oldUpNode.getLeftINL1())
-								oldUpNode.setLeftINL1(next);
+						
+						// The upNode has no child
+						if(oldUpNode.getRightINL2() == this) {
+							oldUpNode.setLeftINL2(null);
+							oldUpNode.setRightINL2(null);
+							oldUpNode.delete(tree);
+							return;
 						}
-						oldUpNode.fuse(tree);
+						// Update the leftINL2 of the old upNode 
+						oldUpNode.setLeftINL2(next);
 						return;
 					}
-					// Change the leftINL1 or rightINL1 of the upNode if necessary
-					if (this == upNode.getRightINL1())
-						upNode.setRightINL1(prev);
-					upNode.decNumberOfDownNode();
-					upNode.fuse(tree);
+					// Two nodes have the same up node
+					// => Update the rightINL2 of the up node if necessary
+					if(this == upNode.getRightINL2())
+						upNode.setRightINL2(prev);
+					return;
+					
 				}
 				// The previous node is null
 				if (next != null) {
 					next.setPair(this);
 					pair = next;
-					// Move one child from the next node to this node
-					this.rightMost = next.getLeftMost();
-					next.setLeftMost(leftMost.getNext());
+					
+					// Make sure the left node of the pair always have gammaD sub nodes
+					this.rightINL1 = next.getLeftINL1();
+					rightINL1.setUpNode(this);
+					next.setLeftINL1(rightINL1.getNext());
 					numberOfDownNode++;
 					next.decNumberOfDownNode();
-					upNode.decNumberOfDownNode();
-					upNode.fuse(tree);
+					
+					// Two nodes have different up nodes
+					// Set the up node of the next node as current up node
+					if(upNode != next.getUpNode()) {
+						InternalNode nextUpNode = next.getUpNode();
+						next.setUpNode(upNode);
+						
+						// the old up node of next has no child
+						if(next == nextUpNode.getRightINL2()) {
+							nextUpNode.setLeftINL2(null);
+							nextUpNode.setRightINL2(null);
+							nextUpNode.delete(tree);
+							return;
+						}
+						// Update the leftINL2 of next up node
+						nextUpNode.setLeftINL2(next.getNext());
+						return;
+					}
+					
+					// Two nodes have the same up node
+					// => Update the rightINL2 if necessary
+					if(next == upNode.getRightINL2())
+						upNode.setRightINL2(this);
+					return;
 				}
 			}
 		}

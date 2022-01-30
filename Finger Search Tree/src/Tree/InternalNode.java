@@ -52,7 +52,10 @@ public class InternalNode extends Node {
 	}
 
 	public void delete(FSTree tree) {
-
+		// The node has no sub INL2 node
+		if((leftINL2 == null) && (rightINL2 == null)) {
+			
+		}
 	}
 
 	public int getHight() {

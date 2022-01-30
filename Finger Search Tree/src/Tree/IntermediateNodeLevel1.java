@@ -69,6 +69,7 @@ public class IntermediateNodeLevel1 {
 			if (pair != null) {
 				this.setRightMost(rightMost.getNext());
 				pair.setLeftMost(this.rightMost.getNext());
+				rightMost.setUpNode(this);
 				numberOfDownNode++;
 				pair.decNumberOfDownNode();
 
@@ -91,12 +92,15 @@ public class IntermediateNodeLevel1 {
 				// => move one child from previous node to the current node
 				if ((prev != null) && (prev.getPair() != null)) {
 					leftMost = leftMost.getPrev();
+					leftMost.setUpNode(this);
 					prev.decNumberOfDownNode();
 					numberOfDownNode++;
 
 					// The previous node has no child => delete it
 					if (prev.getNumberOfDownNode() == 0) {
 						IntermediateNodeLevel1 newPrev = prev.getPrev();
+						newPrev.setPair(null);
+						prev.setPair(null);
 						newPrev.setNext(this);
 						prev = newPrev;
 						return;
@@ -110,15 +114,21 @@ public class IntermediateNodeLevel1 {
 				if ((next != null) && (next.pair != null)) {
 					IntermediateNodeLevel1 pairOfNext = next.getPair();
 					rightMost = rightMost.getNext();
+					rightMost.setUpNode(this);
 					numberOfDownNode++;
 					next.setLeftMost(rightMost.getNext());
 					next.setRightMost(pairOfNext.getLeftMost());
+					next.getRightMost().setUpNode(next);
 					pairOfNext.decNumberOfDownNode();
 
 					// The pair node of the next node has no child
+					// => remove it and unlink it with the next node
 					if (pairOfNext.getNumberOfDownNode() == 0) {
-						IntermediateNodeLevel1 newNext = pair.getNext();
-						newNext.setPrev(next);
+						IntermediateNodeLevel1 newNext = pairOfNext.getNext();
+						pairOfNext.setPair(null);
+						next.setPair(null);
+						if (newNext != null)
+							newNext.setPrev(next);
 						next.setNext(newNext);
 						return;
 					}
@@ -142,23 +152,29 @@ public class IntermediateNodeLevel1 {
 						oldUpNode.fuse(tree);
 						return;
 					}
-					// Change the leftINL1 or rightINL1 of the upNode if necessary
+					// Tow nodes have the same up node
+					// Change the rightINL1 of the upNode if necessary
 					if (this == upNode.getRightINL1())
 						upNode.setRightINL1(prev);
 					upNode.decNumberOfDownNode();
 					upNode.fuse(tree);
+					return;
 				}
 				// The previous node is null
 				if (next != null) {
 					next.setPair(this);
 					pair = next;
-					// Move one child from the next node to this node
+					
+					// Make sure the left node of the pair always have deltaD sub nodes
 					this.rightMost = next.getLeftMost();
+					rightMost.setUpNode(this);
 					next.setLeftMost(leftMost.getNext());
 					numberOfDownNode++;
 					next.decNumberOfDownNode();
 					upNode.decNumberOfDownNode();
 					upNode.fuse(tree);
+					return;
+					// Don't need to consider the case that two nodes have different up nodes
 				}
 			}
 		}
@@ -166,7 +182,7 @@ public class IntermediateNodeLevel1 {
 		// The current node has no child
 		if (numberOfDownNode == 0)
 			// The current node has a pair node
-			if(pair != null) {
+			if (pair != null) {
 				pair.setNext(next);
 				next.setPrev(prev);
 				pair.setPair(null);
