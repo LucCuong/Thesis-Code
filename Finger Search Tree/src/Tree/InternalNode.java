@@ -24,11 +24,15 @@ public class InternalNode extends Node {
 
 	public void split(FSTree tree) {
 		if (dead == false)
-			if ((leftINL2.getPair() != rightINL2) && (leftINL2 != rightINL2)) {
-				InternalNode newIN;
-				newIN = new InternalNode(height, upNode, this, next, rightINL2, rightINL2);
+			if (rightINL2 != leftINL2) {
+				InternalNode newIN = new InternalNode(height, upNode, this, this.next, rightINL2, rightINL2);
+				rightINL2.setUpNode(newIN);
+				if(next != null)
+					next.setPrev(newIN);
 				next = newIN;
-				// current node is the root
+				
+				// The current node is the root
+				// => Create a new root
 				if (upNode == null) {
 					InternalNode newRoot = new InternalNode((this.height + 1), null, null, null, null, null);
 					IntermediateNodeLevel2 newINL2 = new IntermediateNodeLevel2(newRoot, null, null, null, null);
@@ -54,10 +58,38 @@ public class InternalNode extends Node {
 	public void delete(FSTree tree) {
 		// The node has no sub INL2 node
 		if((leftINL2 == null) && (rightINL2 == null)) {
+			dead = true;
+			prev.setNext(next);
+			if(next != null)
+				next.setPrev(prev);
+			upNode.decNumberOfDownNode();
 			
+			// Update the leftmost or rightmost sub node of the up node
+			if(this == upNode.getLeftMost())
+				upNode.setLeftMost(next);
+			if(this == upNode.getRightMost())
+				upNode.setRightMost(prev);
+			upNode.fuse(tree);
 		}
 	}
-
+	
+	public void reduce(FSTree tree) {
+		if ((upNode == null) && (height > 1)) {
+			// Current node is root and only has one sub node
+			// And the sub node has only one sub node
+			if((leftINL2 == rightINL2) && (leftINL2.getLeftINL1() == leftINL2.getRightINL1())) {
+				IntermediateNodeLevel1 onlyINL1 = leftINL2.getLeftINL1();
+				if(onlyINL1.getNumberOfDownNode() == 1) {
+					InternalNode newRoot = (InternalNode) onlyINL1.getLeftMost();
+					tree.setRoot(newRoot);
+					onlyINL1.setLeftMost(null);
+					onlyINL1.setRightMost(null);
+					newRoot.setUpNode(null);
+				}
+			}
+		}
+	}
+	
 	public int getHight() {
 		return height;
 	}

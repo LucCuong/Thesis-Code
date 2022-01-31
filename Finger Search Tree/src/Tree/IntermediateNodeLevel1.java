@@ -26,8 +26,10 @@ public class IntermediateNodeLevel1 {
 			// the INL1 doesn't have a pair yet
 			if (pair == null) {
 				// create a new pair node and assign the new pair as rightmost INL1
-				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(upNode, this, this.next, this.rightMost,
+				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(this.upNode, this, this.next, this.rightMost,
 						this.rightMost);
+				if (next != null)
+					next.setPrev(newINL1);
 				next = newINL1;
 				pair = newINL1;
 				newINL1.setPair(this);
@@ -49,16 +51,15 @@ public class IntermediateNodeLevel1 {
 			upNode.split();
 			return;
 		}
-		if (numberOfDownNode == deltaD) {
-			if (pair != null) {
-				pair.setPair(null);
-				pair = null;
-				upNode.incNumberOfDownNode();
-				if (upNode.getRightINL1() == prev)
-					upNode.setRightINL1(this);
-				upNode.split();
-			}
-
+		
+		// The current node has a pair node and reaches deltaD sub nodes
+		if ((numberOfDownNode == deltaD) && (pair != null)) {
+			pair.setPair(null);
+			pair = null;
+			upNode.incNumberOfDownNode();
+			if (upNode.getRightINL1() == prev)
+				upNode.setRightINL1(this);
+			upNode.split();
 		}
 	}
 
@@ -164,7 +165,7 @@ public class IntermediateNodeLevel1 {
 				if (next != null) {
 					next.setPair(this);
 					pair = next;
-					
+
 					// Make sure the left node of the pair always have deltaD sub nodes
 					this.rightMost = next.getLeftMost();
 					rightMost.setUpNode(this);

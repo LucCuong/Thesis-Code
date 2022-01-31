@@ -56,6 +56,7 @@ public class FSTree {
 		f.updateTriple();
 		newTriples = (LinkedList<Triple>) f.getTriples().clone();
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
+		f.getNext().setPrev(newLeaf);
 		f.setNext(newLeaf);
 		upNode = f.getUpNode();
 		if (upNode.getRightMost() == f)
@@ -74,7 +75,8 @@ public class FSTree {
 
 		// Remove the leaf from the double linked list
 		prev.setNext(next);
-		next.setPrev(prev);
+		if (next != null)
+			next.setPrev(prev);
 
 		// Change the leftmost or rightmost child of the upNode if necessary
 		if (upNode.getNumberOfDownNode() > 1) {
