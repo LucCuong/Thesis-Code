@@ -57,7 +57,7 @@ public class InternalNode extends Node {
 
 	public void delete(FSTree tree) {
 		// The node has no sub INL2 node
-		if((leftINL2 == null) && (rightINL2 == null)) {
+		if(leftINL2 == null && rightINL2 == null) {
 			dead = true;
 			prev.setNext(next);
 			if(next != null)
@@ -70,6 +70,12 @@ public class InternalNode extends Node {
 			if(this == upNode.getRightMost())
 				upNode.setRightMost(prev);
 			upNode.fuse(tree);
+			// Reduce heigth of the tree if the root has only one child
+			if(height == tree.getRoot().getHight()-1) {
+				InternalNode father = upNode.getUpNode().getUpNode();
+				father.reduce(tree);
+			}
+			
 		}
 	}
 	
@@ -80,6 +86,7 @@ public class InternalNode extends Node {
 			if((leftINL2 == rightINL2) && (leftINL2.getLeftINL1() == leftINL2.getRightINL1())) {
 				IntermediateNodeLevel1 onlyINL1 = leftINL2.getLeftINL1();
 				if(onlyINL1.getNumberOfDownNode() == 1) {
+					dead = true;
 					InternalNode newRoot = (InternalNode) onlyINL1.getLeftMost();
 					tree.setRoot(newRoot);
 					onlyINL1.setLeftMost(null);

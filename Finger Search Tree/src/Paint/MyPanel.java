@@ -29,7 +29,7 @@ public class MyPanel extends JPanel {
 		InternalNode tempIN, tempIN2;
 		IntermediateNodeLevel2 tempINL2;
 		IntermediateNodeLevel1 tempINL1;
-
+		
 		int heightOfTree = tree.getRoot().getHight();
 		Graphics2D g2D = (Graphics2D) g;
 		int numberOfLeaves = 0;
@@ -49,10 +49,14 @@ public class MyPanel extends JPanel {
 		// Paint
 		tempIN = tree.getRoot();
 		tempIN2 = tempIN;
+		// Go up-bottom
 		for(int i = 0; i < heightOfTree; i++) {
+			// Assign co-ordinate and distance according to the current height 
 			nodesDistance = leafDistance + i * 20;
 			tempINY = 50 + heightDistance * i;
 			tempINX = 50 + nodesDistance; 
+			
+			// INTERNAL NODE LAYER
 			while(tempIN != null) {
 				tempINL2 = tempIN.getLeftINL2();
 				tempINL1  = tempINL2.getLeftINL1();
@@ -63,7 +67,8 @@ public class MyPanel extends JPanel {
 				g2D.fillOval(tempINX, tempINY, 20, 20);
 				
 				tempINL2Y = tempINY + verticalDistance;
-				// Paint intermediate nodes 
+				
+				// Intermediate level 2 node layer 
 				while(tempINL2 != null) {
 //					temp2X = 
 					g2D.setPaint(Color.red);

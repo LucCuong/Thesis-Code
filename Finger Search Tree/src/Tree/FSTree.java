@@ -56,7 +56,8 @@ public class FSTree {
 		f.updateTriple();
 		newTriples = (LinkedList<Triple>) f.getTriples().clone();
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
-		f.getNext().setPrev(newLeaf);
+		if (f.getNext() != null)
+			f.getNext().setPrev(newLeaf);
 		f.setNext(newLeaf);
 		upNode = f.getUpNode();
 		if (upNode.getRightMost() == f)
