@@ -3,7 +3,6 @@ package Tree;
 
 public class InternalNode extends Node {
 	private int height;
-	private long gammaD;
 	private boolean dead;
 	private IntermediateNodeLevel1 upNode;
 	private InternalNode next;
@@ -127,14 +126,6 @@ public class InternalNode extends Node {
 
 	public void setPrev(InternalNode prev) {
 		this.prev = prev;
-	}
-
-	public long getGammaD() {
-		return gammaD;
-	}
-
-	public void setGammaD(long gammaD) {
-		this.gammaD = gammaD;
 	}
 
 	public IntermediateNodeLevel2 getLeftINL2() {

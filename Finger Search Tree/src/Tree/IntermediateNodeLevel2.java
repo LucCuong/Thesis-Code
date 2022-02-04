@@ -33,7 +33,7 @@ public class IntermediateNodeLevel2 {
 				next = newINL2;
 				pair = newINL2;
 				newINL2.setPair(this);
-				pair.incNumberOfDownNode();
+				return;
 			} else {
 				// the current INL2 node already has a pair node
 				pair.setLeftINL1(rightINL1);
@@ -45,6 +45,7 @@ public class IntermediateNodeLevel2 {
 						upNode.setRightINL2(next);
 				}
 			}
+			rightINL1.setUpNode(next);
 			rightINL1 = rightINL1.getPrev();
 			numberOfDownNode--;
 			return;

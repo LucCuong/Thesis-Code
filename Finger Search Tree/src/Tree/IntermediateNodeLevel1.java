@@ -17,7 +17,7 @@ public class IntermediateNodeLevel1 {
 		this.next = next;
 		this.leftMost = leftMost;
 		this.rightMost = rightMost;
-		this.numberOfDownNode = 0;
+		this.numberOfDownNode = 1;
 		this.deltaD = DeltaD(upNode.getUpNode().getHight());
 	}
 
@@ -33,7 +33,7 @@ public class IntermediateNodeLevel1 {
 				next = newINL1;
 				pair = newINL1;
 				newINL1.setPair(this);
-				pair.incNumberOfDownNode();
+				return;
 			} else {
 				// the current INL1 already has a pair node
 				pair.setLeftMost(rightMost);
@@ -46,6 +46,7 @@ public class IntermediateNodeLevel1 {
 						upNode.setRightINL1(next);
 				}
 			}
+			rightMost.setUpNode(next);
 			rightMost = rightMost.getPrev();
 			numberOfDownNode--;
 			upNode.split();
