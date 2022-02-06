@@ -33,7 +33,6 @@ public class IntermediateNodeLevel1 {
 				next = newINL1;
 				pair = newINL1;
 				newINL1.setPair(this);
-				return;
 			} else {
 				// the current INL1 already has a pair node
 				pair.setLeftMost(rightMost);
@@ -54,7 +53,7 @@ public class IntermediateNodeLevel1 {
 		}
 		
 		// The current node has a pair node and reaches deltaD sub nodes
-		if ((numberOfDownNode == deltaD) && (pair != null)) {
+		if ((numberOfDownNode == deltaD) && (pair != null) && (pair.getNumberOfDownNode() == deltaD)) {
 			pair.setPair(null);
 			pair = null;
 			upNode.incNumberOfDownNode();

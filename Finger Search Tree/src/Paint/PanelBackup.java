@@ -5,7 +5,7 @@ import javax.swing.*;
 
 import Tree.*;
 
-public class MyPanel extends JPanel {
+public class PanelBackup extends JPanel {
 
 	// Image image;
 
@@ -16,24 +16,21 @@ public class MyPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private int width = 1900;
 	private int height = 1000;
-	public MyPanel(FSTree tree) {
-
-		this.tree = tree;
-		// image = new ImageIcon("sky.png").getImage();
-		this.setPreferredSize(new Dimension(2000, 1500));
-	}
+//	public MyPanel(FSTree tree) {
+//
+//		this.tree = tree;
+//		// image = new ImageIcon("sky.png").getImage();
+//		this.setPreferredSize(new Dimension(2000, 1500));
+//	}
 
 	public void paint(Graphics g) {
 		int leafDistance, verticalDistance, heightDistance, nodesDistance;
 		int tempINL1X, tempINL1Y,tempINL2X, tempINL2Y, tempINX, tempINY, tempChildX, tempChildY, tempLeafX, tempLeafY;		//temporary co-ordinate
-		int INdistance, INL2distance, INL1distance;
-		int nbOfIN = 0, nbOfINL2 = 0, nbOfINL1 = 0, nbOfChild = 0;
 		InternalNode tempIN, firstIN, child;
 		IntermediateNodeLevel2 tempINL2;
 		IntermediateNodeLevel1 tempINL1;
 		Leaf tempLeaf;
 		
-		int middleScreen = width / 2;
 		int heightOfTree = tree.getRoot().getHight();
 		Graphics2D g2D = (Graphics2D) g;
 		int numberOfLeaves = 0;
@@ -55,38 +52,18 @@ public class MyPanel extends JPanel {
 		tempIN = tree.getRoot();
 		firstIN = tempIN;
 		// Go up-bottom
-		for(int i = heightOfTree; i > 0; i--) {
-			System.out.println("Loop in the height " + i + " of the tree!!!");
+		for(int i = 0; i < heightOfTree; i++) {
+			System.out.println("Loop in the height " + (heightOfTree - i) + " of the tree!!!");
 			// Assign co-ordinate and distance according to the current height 
-			INdistance = leafDistance + i * 20;
-			INL2distance = INdistance - i * 5;
-			INL1distance = INL2distance - i * 5;
-			nodesDistance = leafDistance + (heightOfTree - i) * 20;								// distance of two nodes in the same line
-			tempINY = 50 + heightDistance * (heightOfTree - i);									// vertical co-ordinate of internal node
+			nodesDistance = leafDistance + i * 20;								// distance of two nodes in the same line
+			tempINY = 50 + heightDistance * i;									// vertical co-ordinate of internal node
 			tempINX = 50; 														// horizontal co-ordinate of internal node
 			tempINL1X = 50;
 			tempINL2X = 50;
 			tempChildX = 50;
 			tempLeafX = 50;
-			
-			// Count number of nodes in layers
-			tempINL2 = firstIN.getLeftINL2();
-			tempINL1 = tempINL2.getLeftINL1();
-			while(tempINL1 != null) {
-				nbOfINL1++;
-				tempINL1 = tempINL1.getNext();
-			}
-			while(tempINL2 != null) {
-				nbOfINL2++;
-				tempINL2 = tempINL2.getNext();
-			}
-			while(firstIN != null) {
-				nbOfIN++;
-				firstIN = firstIN.getNext();
-			}
-			
-			firstIN = tempIN;
-			if(i != 1) {
+
+			if(i != (heightOfTree-1)) {
 				// INTERNAL NODE LAYER
 				while(tempIN != null) {
 					System.out.println("Printing INTERNAL NODE in co-ordinate (" + tempINX + "," + tempINY + ")");
@@ -109,7 +86,7 @@ public class MyPanel extends JPanel {
 						// Draw line
 						g2D.setPaint(Color.blue);
 						g2D.setStroke(new BasicStroke(1));
-						g2D.drawLine(tempINX, tempINY, tempINL2X, tempINL2Y);
+						g2D.drawLine(tempINX + 4, tempINY + 4, tempINL2X, tempINL2Y);
 						
 						// Draw connection between two pair nodes
 						if(tempINL2.getPair() != null && (tempINL2.getPair() == tempINL2.getNext())) {
@@ -135,11 +112,11 @@ public class MyPanel extends JPanel {
 							if(tempINL1.getPair() != null && (tempINL1.getPair() == tempINL1.getNext())) {
 								g2D.setPaint(Color.orange);
 								g2D.setStroke(new BasicStroke(1));
-								g2D.drawLine(tempINL1X, tempINL1Y, tempINL1X + nodesDistance, tempINL1Y);
+								g2D.drawLine(tempINL1X + 4, tempINL1Y, tempINL1X + nodesDistance, tempINL1Y);
 							}
 							
 							child = (InternalNode) tempINL1.getLeftMost();
-							tempChildY = 50 + heightDistance * (heightOfTree - i + 1);
+							tempChildY = 50 + heightDistance * (i+1);
 							while(child != null && child.getUpNode() == tempINL1) {
 								System.out.println("Printing child node in co-ordinate (" + tempChildX + "," + tempChildY + ")");
 //								g2D.setPaint(Color.black);
@@ -149,7 +126,7 @@ public class MyPanel extends JPanel {
 								// Draw line
 								g2D.setPaint(Color.blue);
 								g2D.setStroke(new BasicStroke(1));
-								g2D.drawLine(tempINL1X, tempINL1Y, tempChildX, tempChildY);
+								g2D.drawLine(tempINL1X + 4, tempINL1Y + 4, tempChildX, tempChildY);
 								
 								tempChildX += nodesDistance;
 								child = child.getNext();
@@ -190,13 +167,13 @@ public class MyPanel extends JPanel {
 						// Draw line
 						g2D.setPaint(Color.blue);
 						g2D.setStroke(new BasicStroke(1));
-						g2D.drawLine(tempINX, tempINY, tempINL2X, tempINL2Y);
+						g2D.drawLine(tempINX + 4, tempINY + 4, tempINL2X, tempINL2Y);
 						
 						// Draw connection between two pair nodes
 						if(tempINL2.getPair() != null && (tempINL2.getPair() == tempINL2.getNext())) {
 							g2D.setPaint(Color.red);
 							g2D.setStroke(new BasicStroke(1));
-							g2D.drawLine(tempINL2X, tempINL2Y, tempINL2X + nodesDistance, tempINL2Y);
+							g2D.drawLine(tempINL2X + 4, tempINL2Y, tempINL2X + nodesDistance, tempINL2Y);
 						}
 						
 						tempINL1Y = tempINL2Y + verticalDistance;
@@ -210,7 +187,7 @@ public class MyPanel extends JPanel {
 							// Draw line
 							g2D.setPaint(Color.blue);
 							g2D.setStroke(new BasicStroke(1));
-							g2D.drawLine(tempINL2X , tempINL2Y , tempINL1X, tempINL1Y);
+							g2D.drawLine(tempINL2X + 4, tempINL2Y + 4, tempINL1X, tempINL1Y);
 							
 							tempLeaf = (Leaf) tempINL1.getLeftMost();
 							tempLeafY = 50 + heightDistance * (i+1);
@@ -222,13 +199,13 @@ public class MyPanel extends JPanel {
 								// Draw line
 								g2D.setPaint(Color.blue);
 								g2D.setStroke(new BasicStroke(1));
-								g2D.drawLine(tempINL1X , tempINL1Y , tempLeafX, tempLeafY);
+								g2D.drawLine(tempINL1X + 4, tempINL1Y + 4, tempLeafX, tempLeafY);
 								
 								// Draw connection between two pair nodes
 								if(tempINL1.getPair() != null && (tempINL1.getPair() == tempINL1.getNext())) {
 									g2D.setPaint(Color.orange);
 									g2D.setStroke(new BasicStroke(1));
-									g2D.drawLine(tempINL1X, tempINL1Y, tempINL1X + nodesDistance, tempINL1Y);
+									g2D.drawLine(tempINL1X + 4, tempINL1Y, tempINL1X + nodesDistance, tempINL1Y);
 								}
 								
 								tempLeafX += leafDistance;

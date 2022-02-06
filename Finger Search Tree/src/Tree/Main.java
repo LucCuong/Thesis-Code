@@ -9,13 +9,11 @@ public class Main {
 		FSTree tree = new FSTree();
 //		InternalNode root = tree.getRoot();
 		Leaf first = tree.getFirstLeaf();
-		for(int i = 100; i >= 20; i--) {
-			tree.insert(first, i);
-		}
-		for(int i = 19; i >= 0; i--) {
+		for(int i = 1000; i >= 0; i--) {
 			tree.insert(first, i);
 		}
 		new MyFrame(tree);
+		
 	}
 	
 

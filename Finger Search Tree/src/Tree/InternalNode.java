@@ -26,6 +26,12 @@ public class InternalNode extends Node {
 			if (rightINL2 != leftINL2) {
 				InternalNode newIN = new InternalNode(height, upNode, this, this.next, rightINL2, rightINL2);
 				rightINL2.setUpNode(newIN);
+				IntermediateNodeLevel2 newRightINL2 = rightINL2.getPrev();
+				if(newRightINL2.getPair() != null) {
+					rightINL2 = newRightINL2.getPrev();
+				}else {
+					rightINL2 = newRightINL2;
+				}
 				if(next != null)
 					next.setPrev(newIN);
 				next = newIN;
