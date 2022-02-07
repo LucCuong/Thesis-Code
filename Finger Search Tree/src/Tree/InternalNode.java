@@ -19,6 +19,7 @@ public class InternalNode extends Node {
 		this.leftINL2 = leftINL2;
 		this.rightINL2 = rightINL2;
 		this.dead = false;
+		this.upNode = upNode;
 	}
 
 	public void split(FSTree tree) {

@@ -16,6 +16,7 @@ public class Leaf extends Node{
 		this.next = next;
 		this.prev = prev;
 		this.triples = triples;
+		this.upNode = upNode;
 	}
 
 

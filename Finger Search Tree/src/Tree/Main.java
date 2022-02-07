@@ -7,11 +7,12 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		FSTree tree = new FSTree();
-//		InternalNode root = tree.getRoot();
 		Leaf first = tree.getFirstLeaf();
-		for(int i = 1000; i >= 0; i--) {
+		for(int i = 100; i >= 0; i--) {
 			tree.insert(first, i);
 		}
+		InternalNode root = tree.getRoot();
+		System.out.println(root == first.getTriples().getFirst().getAncestor());
 		new MyFrame(tree);
 		
 	}
