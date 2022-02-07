@@ -20,7 +20,6 @@ public class MyPanel extends JPanel {
 	public MyPanel(FSTree tree) {
 
 		this.tree = tree;
-		// image = new ImageIcon("sky.png").getImage();
 		this.setPreferredSize(new Dimension(2000, 1500));
 	}
 
@@ -30,7 +29,7 @@ public class MyPanel extends JPanel {
 																														// co-ordinate
 		int leafDistance, INdistance, INL2distance, INL1distance, childDistance;
 		int nbOfIN = 0, nbOfINL2 = 0, nbOfINL1 = 0, nbOfChild = 0;
-		int INwidth, INL2width, INL1width, childwidth;
+		int INwidth, INL2width, INL1width, childWidth, leavesWidth;
 
 		InternalNode tempIN, firstIN, child;
 		IntermediateNodeLevel2 tempINL2;
@@ -48,21 +47,22 @@ public class MyPanel extends JPanel {
 			nbOfLeaf++;
 			temp = temp.getNext();
 		}
-		
+
 		// Calculations
-		leafDistance = (int) (width - 100) / nbOfLeaf;
+		leavesWidth = nbOfLeaf >= 25? 1800: (int) nbOfLeaf * 50 + 200;
+		leafDistance = (int) leavesWidth / nbOfLeaf;
+		tempLeafX = nbOfLeaf == 1 ? middleScreen : (int) middleScreen - (leavesWidth / 2);
 		heightDistance = (int) (height - 100) / heightOfTree;
-		verticalDistance = (int) heightDistance / 3; // distance between two layer in a height
-		
+		verticalDistance = (int) heightDistance / 3; 
+
 		// Paint
 		tempIN = tree.getRoot();
 		firstIN = tempIN;
 		// Go up-bottom
 		for (int i = heightOfTree; i > 0; i--) {
-//			System.out.println("Loop in the height " + i + " of the tree!!!");
 			// Assign co-ordinate and distance according to the current height
-			tempINY = 50 + heightDistance * (heightOfTree - i); // vertical co-ordinate of internal node
-			tempLeafX = 50;
+			tempINY = 50 + heightDistance * (heightOfTree - i); 
+			
 
 			// Count number of nodes in layers
 			tempINL2 = firstIN.getLeftINL2();
@@ -81,40 +81,53 @@ public class MyPanel extends JPanel {
 			}
 
 			// Width of a layer
-			INL1width = (int) 1700 - i * 700;
-			INL2width = (int) 2 * INL1width / 3;
-			INwidth = (int) INL1width / 2;
+			INL1width = (int)leavesWidth * 11 / 13 / (i * 3/ 2);
+			INL2width = (int)leavesWidth * 9 / 13 / (i * 3/ 2);
+			INwidth = (int)leavesWidth * 7 / 13 / (i * 3/ 2);
 
 			// Distance between nodes in a layer according to width of layer
-			INdistance = nbOfIN == 1? INwidth : (int) INwidth / (nbOfIN-1);
-			INL2distance = nbOfINL2 == 1? INwidth : (int) INL2width / (nbOfINL2-1);
-			INL1distance = nbOfINL1 == 1? INwidth : (int) INL1width / (nbOfINL1-1);
-			
+			INdistance = nbOfIN == 1 ? INwidth : (int) INwidth / (nbOfIN - 1);
+			INL2distance = nbOfINL2 == 1 ? INwidth : (int) INL2width / (nbOfINL2 - 1);
+			INL1distance = nbOfINL1 == 1 ? INwidth : (int) INL1width / (nbOfINL1 - 1);
 
-			tempINX = nbOfIN == 1? middleScreen : (int) middleScreen - (INwidth / 2);
-			tempINL2X = nbOfINL2 == 1? middleScreen : (int) middleScreen - (INL2width / 2);
-			tempINL1X = nbOfINL1 == 1? middleScreen : (int) middleScreen - (INL1width / 2);
-//			System.out.println("nbOfIN in layer " + i + ": "+ nbOfIN);
+			tempINX = nbOfIN == 1 ? middleScreen : (int) middleScreen - (INwidth / 2);
+			tempINL2X = nbOfINL2 == 1 ? middleScreen : (int) middleScreen - (INL2width / 2);
+			tempINL1X = nbOfINL1 == 1 ? middleScreen : (int) middleScreen - (INL1width / 2);
 			nbOfIN = 0;
 			nbOfINL2 = 0;
 			nbOfINL1 = 0;
-			
+
 			firstIN = tempIN;
 			if (i != 1) {
+				tempINL2 = firstIN.getLeftINL2();
+				tempINL1 = tempINL2.getLeftINL1();
+				child = (InternalNode) tempINL1.getLeftMost();
+				while (child != null) {
+					nbOfChild++;
+					child = child.getNext();
+				}
+
+				// Calculate for the child layer
+				childWidth = INwidth = (int)leavesWidth * 7 / 13 / ((i-1) * 3/ 2);
+				childDistance = nbOfChild == 1 ? childWidth : childWidth / (nbOfChild - 1);
+				tempChildX = nbOfChild == 1 ? middleScreen : (int) middleScreen - (childWidth / 2);
+				nbOfChild = 0;
 				// INTERNAL NODE LAYER
 				while (tempIN != null) {
-//					System.out.println("Printing INTERNAL NODE in co-ordinate (" + tempINX + "," + tempINY + ")");
 
 					// Paint the InternalNode
 					g2D.setPaint(Color.black);
 					g2D.drawOval(tempINX, tempINY, 15, 15);
 					g2D.fillOval(tempINX, tempINY, 15, 15);
 
+					// Paint the ID of the InternalNode
+					g2D.setPaint(Color.black);
+					g2D.drawString("" + tempIN.hashCode() % 1000, tempINX - 10, tempINY + 25);
+
 					tempINL2Y = tempINY + verticalDistance;
 					tempINL2 = tempIN.getLeftINL2();
 					// Intermediate level 2 node layer
 					while (tempINL2 != null && tempINL2.getUpNode() == tempIN) {
-//						System.out.println("Printing intermediate LEVEL 2 node in co-ordinate (" + tempINL2X + "," + tempINL2Y + ")");
 						g2D.setPaint(Color.red);
 						g2D.drawOval(tempINL2X, tempINL2Y, 15, 15);
 						g2D.fillOval(tempINL2X, tempINL2Y, 15, 15);
@@ -124,17 +137,20 @@ public class MyPanel extends JPanel {
 						g2D.setStroke(new BasicStroke(1));
 						g2D.drawLine(tempINX + 7, tempINY + 7, tempINL2X + 7, tempINL2Y + 7);
 
+						// Paint the ID of the IntermediateNodeLevel2
+						g2D.setPaint(Color.red);
+						g2D.drawString("" + tempINL2.hashCode() % 1000, tempINL2X - 10, tempINL2Y + 25);
+
 						// Draw connection between two pair nodes
 						if (tempINL2.getPair() != null && (tempINL2.getPair() == tempINL2.getNext())) {
 							g2D.setPaint(Color.red);
 							g2D.setStroke(new BasicStroke(1));
-							g2D.drawLine(tempINL2X  + 7, tempINL2Y + 7, tempINL2X + INL2distance + 7, tempINL2Y + 7);
+							g2D.drawLine(tempINL2X + 7, tempINL2Y + 7, tempINL2X + INL2distance + 7, tempINL2Y + 7);
 						}
 
 						tempINL1Y = tempINL2Y + verticalDistance;
 						tempINL1 = tempINL2.getLeftINL1();
 						while (tempINL1 != null && tempINL1.getUpNode() == tempINL2) {
-//							System.out.println("Printing intermediate LEVEL 1 node in co-ordinate (" + tempINL1X + "," + tempINL1Y + ")");
 							g2D.setPaint(Color.orange);
 							g2D.drawOval(tempINL1X, tempINL1Y, 15, 15);
 							g2D.fillOval(tempINL1X, tempINL1Y, 15, 15);
@@ -142,7 +158,11 @@ public class MyPanel extends JPanel {
 							// Draw line
 							g2D.setPaint(Color.blue);
 							g2D.setStroke(new BasicStroke(1));
-							g2D.drawLine(tempINL2X  + 7, tempINL2Y  + 7, tempINL1X + 7, tempINL1Y + 7);
+							g2D.drawLine(tempINL2X + 7, tempINL2Y + 7, tempINL1X + 7, tempINL1Y + 7);
+
+							// Paint the ID of the IntermediateNodeLevel1
+							g2D.setPaint(Color.orange);
+							g2D.drawString("" + tempINL1.hashCode() % 1000, tempINL1X - 10, tempINL1Y + 25);
 
 							// Draw connection between two pair nodes
 							if (tempINL1.getPair() != null && (tempINL1.getPair() == tempINL1.getNext())) {
@@ -152,21 +172,10 @@ public class MyPanel extends JPanel {
 							}
 
 							child = (InternalNode) tempINL1.getLeftMost();
-							while(child != null) {
-								nbOfChild++;
-								child = child.getNext();
-							}
-							
-							// Calculate for the child layer 
-							childwidth = (int) (1700 - (i -1) * 700) / 2;
-							childDistance = nbOfChild == 1? childwidth: childwidth / (nbOfChild - 1);
-							tempChildX = nbOfChild == 1? middleScreen : (int) middleScreen - (childwidth / 2);
-//							System.out.println("nbOfChild in layer " + (i-1) + ": "+ nbOfChild);
-							nbOfChild = 0;
-							child = (InternalNode) tempINL1.getLeftMost();
 							tempChildY = tempINL1Y + verticalDistance;
 							while (child != null && child.getUpNode() == tempINL1) {
-								System.out.println("Printing child node in co-ordinate (" + tempChildX + "," + tempChildY + ")");
+								System.out.println(
+										"Printing child node in co-ordinate (" + tempChildX + "," + tempChildY + ")");
 								g2D.setPaint(Color.black);
 								g2D.drawOval(tempChildX, tempChildY, 15, 15);
 								g2D.fillOval(tempChildX, tempChildY, 15, 15);
@@ -175,7 +184,7 @@ public class MyPanel extends JPanel {
 								g2D.setPaint(Color.blue);
 								g2D.setStroke(new BasicStroke(1));
 								g2D.drawLine(tempINL1X + 7, tempINL1Y + 7, tempChildX + 7, tempChildY + 7);
-								
+
 								tempChildX += childDistance;
 								child = child.getNext();
 							}
@@ -202,11 +211,14 @@ public class MyPanel extends JPanel {
 					g2D.drawOval(tempINX, tempINY, 15, 15);
 					g2D.fillOval(tempINX, tempINY, 15, 15);
 
+					// Paint the ID of the InternalNode
+					g2D.setPaint(Color.black);
+					g2D.drawString("" + tempIN.hashCode() % 1000, tempINX - 10, tempINY + 25);
+
 					tempINL2Y = tempINY + verticalDistance;
 					tempINL2 = tempIN.getLeftINL2();
 					// Intermediate level 2 node layer
 					while (tempINL2 != null && tempINL2.getUpNode() == tempIN) {
-//						System.out.println("Printing intermediate LEVEL 2 node in co-ordinate (" + tempINL2X + "," + tempINL2Y + ")");
 						g2D.setPaint(Color.red);
 						g2D.drawOval(tempINL2X, tempINL2Y, 15, 15);
 						g2D.fillOval(tempINL2X, tempINL2Y, 15, 15);
@@ -215,6 +227,10 @@ public class MyPanel extends JPanel {
 						g2D.setPaint(Color.blue);
 						g2D.setStroke(new BasicStroke(1));
 						g2D.drawLine(tempINX + 7, tempINY + 7, tempINL2X + 7, tempINL2Y + 7);
+
+						// Paint the ID of the IntermediateNodeLevel2
+						g2D.setPaint(Color.red);
+						g2D.drawString("" + tempINL2.hashCode() % 1000, tempINL2X - 10, tempINL2Y + 25);
 
 						// Draw connection between two pair nodes
 						if (tempINL2.getPair() != null && (tempINL2.getPair() == tempINL2.getNext())) {
@@ -226,7 +242,6 @@ public class MyPanel extends JPanel {
 						tempINL1Y = tempINL2Y + verticalDistance;
 						tempINL1 = tempINL2.getLeftINL1();
 						while (tempINL1 != null && tempINL1.getUpNode() == tempINL2) {
-//							System.out.println("Printing intermediate LEVEL 1 node in co-ordinate (" + tempINL1X + "," + tempINL1Y + ")");
 							g2D.setPaint(Color.orange);
 							g2D.drawOval(tempINL1X, tempINL1Y, 15, 15);
 							g2D.fillOval(tempINL1X, tempINL1Y, 15, 15);
@@ -235,6 +250,10 @@ public class MyPanel extends JPanel {
 							g2D.setPaint(Color.blue);
 							g2D.setStroke(new BasicStroke(1));
 							g2D.drawLine(tempINL2X + 7, tempINL2Y + 7, tempINL1X + 7, tempINL1Y + 7);
+
+							// Paint the ID of the IntermediateNodeLevel1
+							g2D.setPaint(Color.orange);
+							g2D.drawString("" + tempINL1.hashCode() % 1000, tempINL1X - 10, tempINL1Y + 25);
 
 							tempLeaf = (Leaf) tempINL1.getLeftMost();
 							tempLeafY = tempINL1Y + verticalDistance;
@@ -252,8 +271,13 @@ public class MyPanel extends JPanel {
 								if (tempINL1.getPair() != null && (tempINL1.getPair() == tempINL1.getNext())) {
 									g2D.setPaint(Color.orange);
 									g2D.setStroke(new BasicStroke(1));
-									g2D.drawLine(tempINL1X + 7, tempINL1Y + 7, tempINL1X + INL1distance + 7, tempINL1Y + 7);
+									g2D.drawLine(tempINL1X + 7, tempINL1Y + 7, tempINL1X + INL1distance + 7,
+											tempINL1Y + 7);
 								}
+
+								// Draw value of leaves
+								g2D.setPaint(Color.magenta);
+								g2D.drawString("" + tempLeaf.getValue(), tempLeafX - 10, tempLeafY + 25);
 
 								tempLeafX += leafDistance;
 								tempLeaf = tempLeaf.getNext();

@@ -8,11 +8,12 @@ public class Main {
 		// TODO Auto-generated method stub
 		FSTree tree = new FSTree();
 		Leaf first = tree.getFirstLeaf();
-		for(int i = 100; i >= 0; i--) {
+		for(int i = 80; i >= 0; i--) {
 			tree.insert(first, i);
 		}
-		InternalNode root = tree.getRoot();
-		System.out.println(root == first.getTriples().getFirst().getAncestor());
+//		tree.insert(first, 0);
+//		InternalNode root = tree.getRoot();
+//		System.out.println(root == first.getTriples().getFirst().getAncestor());
 		new MyFrame(tree);
 		
 	}
