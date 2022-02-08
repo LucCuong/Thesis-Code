@@ -64,7 +64,6 @@ public class IntermediateNodeLevel1 {
 	}
 
 	public void fuse(FSTree tree) {
-		// TODO: check the prev and next before using => null pointer
 		if (numberOfDownNode == (deltaD - 1)) {
 			// Move a child from the pair node to this node
 			if (pair != null) {

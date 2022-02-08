@@ -45,6 +45,8 @@ public class IntermediateNodeLevel2 {
 				}
 			}
 			rightINL1.setUpNode(next);
+			if(rightINL1.getPair() != null)
+				rightINL1.getPair().setUpNode(next);
 			rightINL1 = rightINL1.getPrev();
 			numberOfDownNode--;
 			return;

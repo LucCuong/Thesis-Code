@@ -2,6 +2,8 @@ package Tree;
 
 import java.util.LinkedList;
 
+import Paint.MyFrame;
+
 public class FSTree {
 	private InternalNode root;
 	private Leaf firstLeaf;
@@ -90,11 +92,15 @@ public class FSTree {
 		upNode.decNumberOfDownNode();
 		upNode.fuse(this);
 	}
-
-	public void paintImage() {
-
+	
+	public FSTree linearSpace() {
+		return null;
 	}
-
+	
+	public void paintImage() {
+		new MyFrame(this);
+	}
+	
 	public InternalNode getRoot() {
 		return root;
 	}

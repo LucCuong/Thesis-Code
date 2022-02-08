@@ -40,14 +40,15 @@ public class MyPanel extends JPanel {
 		int heightOfTree = tree.getRoot().getHight();
 		Graphics2D g2D = (Graphics2D) g;
 		int nbOfLeaf = 0;
-		Leaf temp = tree.getFirstLeaf();
+		tempLeaf = tree.getFirstLeaf();
 
 		// Get the number of all leaves
-		while (temp != null) {
+		while (tempLeaf != null) {
 			nbOfLeaf++;
-			temp = temp.getNext();
+			tempLeaf = tempLeaf.getNext();
 		}
-
+		System.out.println(nbOfLeaf);
+		
 		// Calculations
 		leavesWidth = nbOfLeaf >= 25? 1800: (int) nbOfLeaf * 50 + 200;
 		leafDistance = (int) leavesWidth / nbOfLeaf;
@@ -174,8 +175,7 @@ public class MyPanel extends JPanel {
 							child = (InternalNode) tempINL1.getLeftMost();
 							tempChildY = tempINL1Y + verticalDistance;
 							while (child != null && child.getUpNode() == tempINL1) {
-								System.out.println(
-										"Printing child node in co-ordinate (" + tempChildX + "," + tempChildY + ")");
+//								System.out.println("Printing child node in co-ordinate (" + tempChildX + "," + tempChildY + ")");
 								g2D.setPaint(Color.black);
 								g2D.drawOval(tempChildX, tempChildY, 15, 15);
 								g2D.fillOval(tempChildX, tempChildY, 15, 15);
@@ -250,7 +250,15 @@ public class MyPanel extends JPanel {
 							g2D.setPaint(Color.blue);
 							g2D.setStroke(new BasicStroke(1));
 							g2D.drawLine(tempINL2X + 7, tempINL2Y + 7, tempINL1X + 7, tempINL1Y + 7);
-
+							
+							// Draw connection between two pair nodes
+							if (tempINL1.getPair() != null && (tempINL1.getPair() == tempINL1.getNext())) {
+								g2D.setPaint(Color.orange);
+								g2D.setStroke(new BasicStroke(1));
+								g2D.drawLine(tempINL1X + 7, tempINL1Y + 7, tempINL1X + INL1distance + 7,
+										tempINL1Y + 7);
+							}
+							
 							// Paint the ID of the IntermediateNodeLevel1
 							g2D.setPaint(Color.orange);
 							g2D.drawString("" + tempINL1.hashCode() % 1000, tempINL1X - 10, tempINL1Y + 25);
@@ -267,17 +275,9 @@ public class MyPanel extends JPanel {
 								g2D.setStroke(new BasicStroke(1));
 								g2D.drawLine(tempINL1X + 7, tempINL1Y + 7, tempLeafX + 7, tempLeafY + 7);
 
-								// Draw connection between two pair nodes
-								if (tempINL1.getPair() != null && (tempINL1.getPair() == tempINL1.getNext())) {
-									g2D.setPaint(Color.orange);
-									g2D.setStroke(new BasicStroke(1));
-									g2D.drawLine(tempINL1X + 7, tempINL1Y + 7, tempINL1X + INL1distance + 7,
-											tempINL1Y + 7);
-								}
-
 								// Draw value of leaves
 								g2D.setPaint(Color.magenta);
-								g2D.drawString("" + tempLeaf.getValue(), tempLeafX - 10, tempLeafY + 25);
+								g2D.drawString("" + tempLeaf.getValue(), tempLeafX + 1, tempLeafY + 27);
 
 								tempLeafX += leafDistance;
 								tempLeaf = tempLeaf.getNext();
