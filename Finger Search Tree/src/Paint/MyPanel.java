@@ -47,7 +47,6 @@ public class MyPanel extends JPanel {
 			nbOfLeaf++;
 			tempLeaf = tempLeaf.getNext();
 		}
-		System.out.println(nbOfLeaf);
 		
 		// Calculations
 		leavesWidth = nbOfLeaf >= 25? 1800: (int) nbOfLeaf * 50 + 200;

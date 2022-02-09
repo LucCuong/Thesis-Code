@@ -18,7 +18,7 @@ public class MyFrame extends JFrame {
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setUndecorated(true);
+//		this.setUndecorated(true);
 		this.add(panel);
 		this.pack();
 		this.setLocationRelativeTo(null);

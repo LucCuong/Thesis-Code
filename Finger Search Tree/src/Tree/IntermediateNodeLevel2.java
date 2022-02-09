@@ -45,13 +45,13 @@ public class IntermediateNodeLevel2 {
 				}
 			}
 			rightINL1.setUpNode(next);
-			if(rightINL1.getPair() != null)
+			if (rightINL1.getPair() != null)
 				rightINL1.getPair().setUpNode(next);
 			rightINL1 = rightINL1.getPrev();
 			numberOfDownNode--;
 			return;
 		}
-		
+
 		// The current node has a pair node and reaches gammaD sub nodes
 		if ((numberOfDownNode == gammaD) && (pair != null) && (pair.getNumberOfDownNode() == gammaD)) {
 			pair.setPair(null);
@@ -68,6 +68,8 @@ public class IntermediateNodeLevel2 {
 				this.setRightINL1(rightINL1.getNext());
 				pair.setLeftINL1(this.rightINL1.getNext());
 				rightINL1.setUpNode(this);
+				if (rightINL1.getPair() != null)
+					rightINL1.getPair().setUpNode(this);
 				numberOfDownNode++;
 				pair.decNumberOfDownNode();
 
@@ -76,11 +78,10 @@ public class IntermediateNodeLevel2 {
 					IntermediateNodeLevel2 newNext = pair.getNext();
 					if (newNext != null) {
 						newNext.setPrev(this);
-						this.next = newNext;
-						pair.setPair(null);
-						this.pair = null;
-					} else
-						next = null;
+					}
+					this.next = newNext;
+					pair.setPair(null);
+					this.pair = null;
 					return;
 				}
 			}
@@ -91,6 +92,8 @@ public class IntermediateNodeLevel2 {
 				if ((prev != null) && (prev.getPair() != null)) {
 					leftINL1 = leftINL1.getPrev();
 					leftINL1.setUpNode(this);
+					if (leftINL1.getPair() != null)
+						leftINL1.getPair().setUpNode(this);
 					prev.decNumberOfDownNode();
 					numberOfDownNode++;
 
@@ -113,6 +116,8 @@ public class IntermediateNodeLevel2 {
 					IntermediateNodeLevel2 pairOfNext = next.getPair();
 					rightINL1 = rightINL1.getNext();
 					rightINL1.setUpNode(this);
+					if (rightINL1.getPair() != null)
+						rightINL1.getPair().setUpNode(this);
 					numberOfDownNode++;
 					next.setLeftINL1(rightINL1.getNext());
 					next.setRightINL1(pairOfNext.getLeftINL1());
@@ -165,11 +170,14 @@ public class IntermediateNodeLevel2 {
 				if (next != null) {
 					next.setPair(this);
 					pair = next;
-
 					// Make sure the left node of the pair always have gammaD sub nodes
 					this.rightINL1 = next.getLeftINL1();
 					rightINL1.setUpNode(this);
-					next.setLeftINL1(rightINL1.getNext());
+					if (rightINL1.getPair() != null) {
+						rightINL1.getPair().setUpNode(this);
+						next.setLeftINL1(rightINL1.getNext().getNext());
+					} else
+						next.setLeftINL1(rightINL1.getNext());
 					numberOfDownNode++;
 					next.decNumberOfDownNode();
 
@@ -205,7 +213,8 @@ public class IntermediateNodeLevel2 {
 			// The current node has a pair node
 			if (pair != null) {
 				pair.setNext(next);
-				next.setPrev(prev);
+				if (next != null)
+					next.setPrev(prev);
 				pair.setPair(null);
 				pair = null;
 				return;
