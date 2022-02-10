@@ -15,7 +15,9 @@ public class MyFrame extends JFrame {
 	public MyFrame(FSTree tree) {
 
 		panel = new MyPanel(tree);
-
+		this.setTitle("Finger Search Tree");
+		ImageIcon icon = new ImageIcon("tree.png");
+		this.setIconImage(icon.getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //		this.setUndecorated(true);
