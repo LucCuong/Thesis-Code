@@ -153,6 +153,7 @@ public class IntermediateNodeLevel2 {
 							oldUpNode.setLeftINL2(null);
 							oldUpNode.setRightINL2(null);
 							oldUpNode.delete(tree);
+							this.upNode.split(tree);
 							return;
 						}
 						// Update the leftINL2 of the old upNode
@@ -192,6 +193,7 @@ public class IntermediateNodeLevel2 {
 							nextUpNode.setLeftINL2(null);
 							nextUpNode.setRightINL2(null);
 							nextUpNode.delete(tree);
+							upNode.split(tree);
 							return;
 						}
 						// Update the leftINL2 of next up node

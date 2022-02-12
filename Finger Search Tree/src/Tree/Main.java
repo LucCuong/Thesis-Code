@@ -7,17 +7,17 @@ public class Main {
 		FSTree tree = new FSTree();
 		Leaf first = tree.getFirstLeaf();
 		Leaf temp = first;
-		for (int i = 50; i >= 0; i--) {
-			if (i == 12)
-				temp = tree.insert(first, i);
+		for (int i = 100; i >= 0; i--) {
+			if (i == 0)
+				temp = tree.insert(first, i*2);
 			else
-				tree.insert(first, i);
+				tree.insert(first, i*2);
 		}
-		first = tree.binarySearch(temp, 36);
-//		System.out.println("the found leaf: " + first.getValue());
+		first = tree.binarySearch(temp, 83);
+		System.out.println("the found leaf: " + first.getValue());
 //		temp = first.getNext();
 //		for(int i = 100; i >= 44; i--) {
-//			System.out.println("deleting " + i);
+////			System.out.println("deleting " + i);
 //			tree.delete(temp);
 //			temp = temp.getNext();
 //			

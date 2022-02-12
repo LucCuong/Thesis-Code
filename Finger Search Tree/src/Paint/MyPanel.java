@@ -1,6 +1,11 @@
 package Paint;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import Tree.*;
@@ -24,6 +29,10 @@ public class MyPanel extends JPanel {
 	}
 
 	public void paint(Graphics g) {
+		BufferedImage bi = new BufferedImage(1900, 1000, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2D = bi.createGraphics();
+//		Graphics2D g2D = (Graphics2D) g;
+		
 		int verticalDistance, heightDistance;
 		int tempINL1X, tempINL1Y, tempINL2X, tempINL2Y, tempINX, tempINY, tempChildX, tempChildY, tempLeafX, tempLeafY; // temporary
 																														// co-ordinate
@@ -38,7 +47,6 @@ public class MyPanel extends JPanel {
 
 		int middleScreen = (int) width / 2;
 		int heightOfTree = tree.getRoot().getHight();
-		Graphics2D g2D = (Graphics2D) g;
 		int nbOfLeaf = 0;
 		tempLeaf = tree.getFirstLeaf();
 
@@ -293,6 +301,11 @@ public class MyPanel extends JPanel {
 				}
 			}
 
+		}
+		try {
+			ImageIO.write(bi, "PNG", new File("C:\\Users\\dinhc\\OneDrive\\Desktop\\Thesis\\Images\\TreeImage.PNG"));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
