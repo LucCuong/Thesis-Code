@@ -25,7 +25,7 @@ public class MyPanel extends JPanel {
 	public MyPanel(FSTree tree) {
 
 		this.tree = tree;
-		this.setPreferredSize(new Dimension(2000, 1500));
+		this.setPreferredSize(new Dimension(1900, 1000));
 	}
 
 	public void paint(Graphics g) {
@@ -304,8 +304,10 @@ public class MyPanel extends JPanel {
 		}
 		try {
 			ImageIO.write(bi, "PNG", new File("C:\\Users\\dinhc\\OneDrive\\Desktop\\Thesis\\Images\\TreeImage.PNG"));
+			g2D.dispose();
 		} catch (IOException e) {
 			e.printStackTrace();
+			g2D.dispose();
 		}
 	}
 }

@@ -2,18 +2,17 @@ package Tree;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
 		FSTree tree = new FSTree();
 		Leaf first = tree.getFirstLeaf();
 		Leaf temp = first;
-		for (int i = 100; i >= 0; i--) {
-			if (i == 0)
-				temp = tree.insert(first, i*2);
-			else
-				tree.insert(first, i*2);
+		for (int i = 0; i <= 1000000; i++) {
+			temp = tree.insert(temp, i);
 		}
-		first = tree.binarySearch(temp, 83);
+		System.out.println("Finished insertion... ");
+		Thread.sleep(1000);
+		first = tree.binarySearch(first, 500645);
 		System.out.println("the found leaf: " + first.getValue());
 //		temp = first.getNext();
 //		for(int i = 100; i >= 44; i--) {

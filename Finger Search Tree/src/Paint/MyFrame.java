@@ -23,7 +23,7 @@ public class MyFrame extends JFrame {
 //		this.setUndecorated(true);
 		this.add(panel);
 		this.pack();
-		this.setLocationRelativeTo(null);
+//		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
 	}
