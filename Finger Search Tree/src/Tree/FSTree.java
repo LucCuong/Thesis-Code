@@ -23,7 +23,7 @@ public class FSTree {
 		storage = new CurrentSearchNodeStorage();
 	}
 
-	public Leaf binarySearch(Leaf f, int x) {
+	public Leaf ownSearch(Leaf f, int x) {
 		IntermediateNodeLevel1 upNode = f.getUpNode();
 		// The leaf f has the same value as x
 		if (f.getValue() == x) {
