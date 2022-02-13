@@ -37,6 +37,7 @@ public class FSTree {
 		}
 			
 		// The leaf f has larger value than x, x is located on the left side of f
+		storage.setLeftBarrier(firstLeaf);
 		storage.setRightBarrier(f);
 		return helpSearch1(upNode, false);
 	}

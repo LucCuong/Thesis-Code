@@ -12,7 +12,7 @@ public class Main {
 		}
 		System.out.println("Finished insertion... ");
 		Thread.sleep(1000);
-		first = tree.ownSearch(first, 500002);
+		first = tree.ownSearch(first, -2);
 		System.out.println("the found leaf: " + first.getValue());
 //		temp = first.getNext();
 //		for(int i = 100; i >= 44; i--) {
