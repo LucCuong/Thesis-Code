@@ -46,7 +46,6 @@ public class FSTree {
 			tempINL1 = current;
 			// Already check the rightmost sub node
 			if(tempINL1.getRightMost() == storage.getLeftIN()) {
-				System.out.println("INL1");
 				storage.setLeftINL1(current);
 				return helpSearch2(leftBarrier, x, rightBarrier, current.getUpNode(), true);
 			}
@@ -67,7 +66,7 @@ public class FSTree {
 				return tempLeaf;
 
 			if (tempLeaf.getValue() < x) {
-				System.out.println("INL1: The rightmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
+//				System.out.println("INL1: The rightmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
 				// x is beyond the range spanned by the current node
 				// => Update the new base leaf f and search in the subtree of the current up
 				// node
@@ -76,12 +75,12 @@ public class FSTree {
 			} else {
 				// The rightmost leaf spanned by the current intermediate node level 1 is larger
 				// than x
-				System.out.println("INL1: The rightmost leaf is " + tempLeaf.getValue() + ",bigger than X:" + x);
+//				System.out.println("INL1: The rightmost leaf is " + tempLeaf.getValue() + ",bigger than X:" + x);
 				if (rightBarrier != null && tempLeaf.getValue() >= rightBarrier.getValue()) {
 					if (current.getLeftMost() instanceof InternalNode) {
-						InternalNode rightIN = (InternalNode) storage.getRightIN();
-						if (rightIN != null && rightIN.getNext() != null && rightIN.getNext() != storage.getLeftIN()) {
-							return helpSearch(leftBarrier, x, rightBarrier, rightIN.getNext(), false);
+						InternalNode rightIN = storage.getRightIN();
+						if (rightIN != null && rightIN.getPrev() != null && rightIN.getPrev() != storage.getLeftIN()) {
+							return helpSearch(leftBarrier, x, rightBarrier, rightIN.getPrev(), false);
 						} else {
 							System.out.println("The leaf x doesn't exist!!!");
 							return leftBarrier;
@@ -97,7 +96,6 @@ public class FSTree {
 			tempINL1 = current;
 			// Already check the leftmost sub node
 			if(tempINL1.getLeftMost() == storage.getRightIN()) {
-				System.out.println("INL1");
 				storage.setRightINL1(current);
 				return helpSearch2(leftBarrier, x, rightBarrier, current.getUpNode(), false);
 			}
@@ -112,10 +110,10 @@ public class FSTree {
 				return tempLeaf;
 
 			if (tempLeaf.getValue() < x) {
-				System.out.println("INL1: The leftmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
+//				System.out.println("INL1: The leftmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
 				if (leftBarrier != null && tempLeaf.getValue() <= leftBarrier.getValue()) {
 					if (current.getLeftMost() instanceof InternalNode) {
-						InternalNode leftIN = (InternalNode) storage.getLeftIN();
+						InternalNode leftIN = storage.getLeftIN();
 						if (leftIN != null && leftIN.getNext() != null && leftIN.getNext() != storage.getRightIN()) {
 							return helpSearch(leftBarrier, x, rightBarrier, leftIN.getNext(), true);
 						} else {
@@ -128,7 +126,7 @@ public class FSTree {
 				}
 				return helpSearch1(tempLeaf, x, rightBarrier, tempLeaf.getUpNode(), true);
 			} else {
-				System.out.println("INL1: The leftmost leaf is " + tempLeaf.getValue() + ",larger than X:" + x);
+//				System.out.println("INL1: The leftmost leaf is " + tempLeaf.getValue() + ",larger than X:" + x);
 				// x is beyond the range spanned by the current node
 				storage.setRightINL1(current);
 				return helpSearch2(leftBarrier, x, tempLeaf, current.getUpNode(), false);
@@ -150,7 +148,6 @@ public class FSTree {
 				tempINL1 = tempINL1.getNext();
 			// Already check the leftmost sub node
 			if(tempINL1 == storage.getLeftINL1()) {
-				System.out.println("INL2");
 				storage.setLeftINL2(current);
 				return helpSearch(leftBarrier, x, rightBarrier, current.getUpNode(), true);
 			}
@@ -171,13 +168,13 @@ public class FSTree {
 				return tempLeaf;
 
 			if (tempLeaf.getValue() < x) {
-				System.out.println("INL2: The rightmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
+//				System.out.println("INL2: The rightmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
 				storage.setLeftINL2(current);
 				return helpSearch(tempLeaf, x, rightBarrier, current.getUpNode(), true);
 			} else {
 				// the rightmost leaf spanned by the current intermediate node level 2 is larger
 				// than x
-				System.out.println("INL2: The rightmost leaf is " + tempLeaf.getValue() + ",bigger than X:" + x);
+//				System.out.println("INL2: The rightmost leaf is " + tempLeaf.getValue() + ",bigger than X:" + x);
 				if (rightBarrier != null && tempLeaf.getValue() > rightBarrier.getValue()) {
 					IntermediateNodeLevel1 rightINL1 = storage.getRightINL1();
 					if (rightINL1.getPrev() != null && rightINL1.getPrev() != storage.getLeftINL1()) {
@@ -196,7 +193,6 @@ public class FSTree {
 			tempINL1 = current.getLeftINL1();
 			// Already check the leftmost sub node
 			if(tempINL1 == storage.getRightINL1()) {
-				System.out.println("INL2");
 				storage.setRightINL2(current);
 				return helpSearch(leftBarrier, x, rightBarrier, current.getUpNode(), false);
 			}
@@ -211,7 +207,7 @@ public class FSTree {
 				return tempLeaf;
 
 			if (tempLeaf.getValue() < x) {
-				System.out.println("INL2: The leftmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
+//				System.out.println("INL2: The leftmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
 				if (leftBarrier != null && tempLeaf.getValue() < leftBarrier.getValue()) {
 					IntermediateNodeLevel1 leftINL1 = storage.getLeftINL1();
 					if (leftINL1.getNext() != null && leftINL1.getNext() != storage.getRightINL1())
@@ -223,7 +219,7 @@ public class FSTree {
 				}
 				return helpSearch1(tempLeaf, x, rightBarrier, tempINL1, true);
 			} else {
-				System.out.println("INL2: The leftmost leaf is " + tempLeaf.getValue() + ",larger than X:" + x);
+//				System.out.println("INL2: The leftmost leaf is " + tempLeaf.getValue() + ",larger than X:" + x);
 				storage.setRightINL2(current);
 				return helpSearch(leftBarrier, x, tempLeaf, current.getUpNode(), false);
 			}
@@ -243,7 +239,6 @@ public class FSTree {
 				tempINL2 = tempINL2.getNext();
 			// Already check the leftmost sub node
 			if(tempINL2 == storage.getLeftINL2()) {
-				System.out.println("IN");
 				if (current.getUpNode() != null) {
 					storage.setLeftIN(current);
 					return helpSearch1(leftBarrier, x, rightBarrier, current.getUpNode(), true);
@@ -272,7 +267,7 @@ public class FSTree {
 				return tempLeaf;
 
 			if (tempLeaf.getValue() < x) {
-				System.out.println("IN: The rightmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
+//				System.out.println("IN: The rightmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
 				storage.setLeftIN(current);
 				if (current.getUpNode() != null)
 					return helpSearch1(tempLeaf, x, rightBarrier, current.getUpNode(), true);
@@ -282,7 +277,7 @@ public class FSTree {
 				}
 			} else {
 				// the rightmost leaf spanned by the current internal node is larger than x
-				System.out.println("IN: The rightmost leaf is " + tempLeaf.getValue() + ",bigger than X:" + x);
+//				System.out.println("IN: The rightmost leaf is " + tempLeaf.getValue() + ",bigger than X:" + x);
 				if (rightBarrier != null && tempLeaf.getValue() > rightBarrier.getValue()) {
 					IntermediateNodeLevel2 rightINL2 = storage.getRightINL2();
 					if (rightINL2.getPrev() != null && rightINL2.getPrev() != storage.getLeftINL2())
@@ -301,7 +296,6 @@ public class FSTree {
 			tempINL2 = current.getLeftINL2();
 			// Already check the leftmost sub node
 			if(tempINL2 == storage.getRightINL2()) {
-				System.out.println("IN");
 				if (current.getUpNode() != null) {
 					storage.setRightIN(current);
 					return helpSearch1(leftBarrier, x, rightBarrier, current.getUpNode(), false);
@@ -321,7 +315,7 @@ public class FSTree {
 				return tempLeaf;
 
 			if (tempLeaf.getValue() < x) {
-				System.out.println("IN: The leftmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
+//				System.out.println("IN: The leftmost leaf is " + tempLeaf.getValue() + ",smaller than X:" + x);
 				if (leftBarrier != null && tempLeaf.getValue() < leftBarrier.getValue()) {
 					IntermediateNodeLevel2 leftINL2 = storage.getLeftINL2();
 					if (leftINL2.getNext() != null && leftINL2.getNext() != storage.getRightINL2())
@@ -333,7 +327,7 @@ public class FSTree {
 				}
 				return helpSearch1(tempLeaf, x, rightBarrier, tempINL1, true);
 			} else {
-				System.out.println("IN: The leftmost leaf is " + tempLeaf.getValue() + ",larger than X:" + x);
+//				System.out.println("IN: The leftmost leaf is " + tempLeaf.getValue() + ",larger than X:" + x);
 				if (current.getUpNode() != null) {
 					storage.setRightIN(current);
 					return helpSearch1(leftBarrier, x, tempLeaf, current.getUpNode(), false);
