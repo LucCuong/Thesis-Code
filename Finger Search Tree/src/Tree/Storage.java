@@ -13,7 +13,6 @@ public class Storage {
 	private InternalNode tempIN;
 	private IntermediateNodeLevel1 tempINL1;
 	private IntermediateNodeLevel2 tempINL2;
-	private Leaf tempLeaf;
 	private Leaf leftBarrier;
 	private Leaf rightBarrier;
 	private int x;
@@ -108,12 +107,5 @@ public class Storage {
 	public void setTempINL2(IntermediateNodeLevel2 tempINL2) {
 		this.tempINL2 = tempINL2;
 	}
-	public Leaf getTempLeaf() {
-		return tempLeaf;
-	}
-	public void setTempLeaf(Leaf tempLeaf) {
-		this.tempLeaf = tempLeaf;
-	}
-	
 	
 }

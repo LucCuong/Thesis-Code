@@ -7,13 +7,12 @@ public class Main {
 		FSTree tree = new FSTree();
 		Leaf first = tree.getFirstLeaf();
 		Leaf temp = first;
-		for (int i = 0; i <= 1000000; i++) {
+		for (int i = 0; i <= 7100000; i++) {
 			temp = tree.insert(temp, i);
 		}
 		System.out.println("Finished insertion... ");
-		Thread.sleep(1000);
-		first = tree.ownSearch(first, -2);
-		System.out.println("the found leaf: " + first.getValue());
+		first = tree.ownSearch(first, 3600005);
+		System.out.println("the found leaf: " + first.getValue() + ", called funtions " + FSTree.count + " times");
 //		temp = first.getNext();
 //		for(int i = 100; i >= 44; i--) {
 ////			System.out.println("deleting " + i);
