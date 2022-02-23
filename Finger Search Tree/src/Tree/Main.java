@@ -2,6 +2,12 @@ package Tree;
 
 import java.util.Random;
 
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+import Test.TestSuite;
+
 public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
@@ -14,49 +20,34 @@ public class Main {
 		int upperbound = 50000;
 		int int_random;
 		long start = System.nanoTime();
-		for (int i = 0; i <= 10000; i++) {
-			int_random = rand.nextInt(upperbound);
-			int_random = int_random < 0 ? int_random* (-1) : int_random;
-			System.out.println(int_random);
-			temp = tree.ownSearch(first, int_random);
-			temp = tree.insert(temp, int_random);
+		for (int i = 0; i <= 65; i++) {
+//			int_random = rand.nextInt(upperbound);
+//			int_random = int_random < 0 ? int_random* (-1) : int_random;
+//			System.out.println(int_random);
+//			temp = tree.ownSearch(first, i);
+			temp = tree.insert(temp, i);
 		}
 		long finish = System.nanoTime();
 		long timeElapsed = finish - start;
-		System.out.println("Finished insertions in " + (double)timeElapsed/1000000000);
-		
-		
+		System.out.println("Finished insertions in " + (double) timeElapsed / 1000000000);
+
 		start = System.nanoTime();
-//		for(int i = 0; i <= 1000000; i++ ){
-//			tree.ownSearch(first, i);
+//		for(int i = 0; i <= 65; i++ ){
+//			tree.search(first, i);
 //		}
-		temp = tree.ownSearch(first, 458579);
+		temp = tree.search(first, 33);
 		finish = System.nanoTime();
 		timeElapsed = finish - start;
-		System.out.println("Finished search in " + (double)timeElapsed/1000000000);
+		System.out.println("Finished search in " + (double) timeElapsed / 1000000000);
 		System.out.println("the found leaf: " + temp.getValue() + ", called funtions " + FSTree.count + " times");
-		
-//		temp = first.getNext();
-//		start = System.nanoTime();
-//		for(int i = 0; i <= 7000000; i++ ){
-//			tree.delete(temp);
-//			temp = first.getNext();
-//		}
-//		finish = System.nanoTime();
-//		timeElapsed = finish - start;
-//		System.out.println("Deleted search in " + (double)timeElapsed/1000000000);
-//		temp = first.getNext();
-//		for(int i = 100; i >= 44; i--) {
-////			System.out.println("deleting " + i);
-//			tree.delete(temp);
-//			temp = temp.getNext();
-//			
-//		}
-//		tree.delete(temp);
-//		tree.insert(first, 0);
-//		InternalNode root = tree.getRoot();
-//		System.out.println(root == first.getTriples().getFirst().getAncestor());
-//		tree.paintImage();
+
+		Result result = JUnitCore.runClasses(TestSuite.class);
+
+		for (Failure failure : result.getFailures()) {
+			System.out.println(failure.toString());
+		}
+		System.out.println(result.wasSuccessful());
+		tree.paintImage();
 
 	}
 

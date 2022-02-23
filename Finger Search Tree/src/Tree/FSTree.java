@@ -41,6 +41,7 @@ public class FSTree {
 		storage.setX(x);
 		storage.setINL1(f.getUpNode());
 		storage.setINL2(f.getUpNode().getUpNode());
+		storage.setF(f);
 		InternalNode father = f.getUpNode().getUpNode().getUpNode();
 
 		// Look up on the father node
@@ -48,6 +49,7 @@ public class FSTree {
 	}
 
 	public Leaf helpSearch(InternalNode current) {
+		count++;
 		InternalNode tempIN = current;
 		IntermediateNodeLevel2 tempINL2;
 		IntermediateNodeLevel1 tempINL1;
@@ -116,6 +118,7 @@ public class FSTree {
 	}
 
 	public Leaf helpSearch2(IntermediateNodeLevel2 current) {
+		count++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -141,9 +144,9 @@ public class FSTree {
 
 			if (tempLeaf.getValue() == storage.getX())
 				return tempLeaf;
-			// TODO: x is outside the range spanned by the current intermediate level 2 node
+			// x is outside the range spanned by the current intermediate level 2 node
 			if (tempLeaf.getValue() < storage.getX()) {
-				// TODO: The next INL2 is not null
+				// The next INL2 is not null
 				if (current.getNext() != null) {
 					storage.setINL1(current.getNext().getLeftINL1());
 					return helpSearch2(current.getNext());
@@ -169,10 +172,11 @@ public class FSTree {
 			else {
 				// x is outside of the range => search in the previous INL2
 				if (current.getPrev() != null) {
-					if (current.getPrev().getRightINL1().getPair() != null)
-						storage.setINL1(current.getPrev().getRightINL1().getPair());
+					tempINL1 = current.getPrev().getRightINL1();
+					if (tempINL1.getPair() != null)
+						storage.setINL1(tempINL1.getPair());
 					else
-						storage.setINL1(current.getPrev().getRightINL1());
+						storage.setINL1(tempINL1);
 					return helpSearch2(current.getPrev());
 				}
 				return tempLeaf;
@@ -182,6 +186,7 @@ public class FSTree {
 	}
 
 	public Leaf helpSearch1(IntermediateNodeLevel1 current) {
+		count++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -209,8 +214,8 @@ public class FSTree {
 				// The next INL2 is not null
 				if (current.getNext() != null) {
 					return helpSearch1(current.getNext());
-				} else
-					return tempLeaf;
+				}
+				return tempLeaf;
 			} else {
 				// x is in the range
 				if (current.getLeftMost() instanceof InternalNode) {
@@ -218,7 +223,7 @@ public class FSTree {
 					InternalNode subNode = (InternalNode) current.getLeftMost();
 					storage.setINL2(subNode.getLeftINL2());
 					storage.setINL1(subNode.getLeftINL2().getLeftINL1());
-					return helpSearch(subNode);
+					return helpSearch1(storage.getINL1());
 				} else {
 					// The sub node is a leaf
 					tempLeaf = (Leaf) current.getLeftMost();
@@ -258,7 +263,7 @@ public class FSTree {
 						storage.setINL1(tempINL1.getNext());
 					else
 						storage.setINL1(tempINL1);
-					return helpSearch(subNode);
+					return helpSearch1(storage.getINL1());
 				}
 				tempLeaf = (Leaf) current.getRightMost();
 				if(tempLeaf.getValue() == storage.getX())
@@ -415,7 +420,6 @@ public class FSTree {
 						return ownStorage.getLeftBarrier();
 					}
 				}
-				// TODO: check
 				return ownStorage.getLeftBarrier();
 			}
 		}
