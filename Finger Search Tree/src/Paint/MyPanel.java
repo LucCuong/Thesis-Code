@@ -34,8 +34,8 @@ public class MyPanel extends JPanel {
 //		Graphics2D g2D = (Graphics2D) g;
 		
 		int verticalDistance, heightDistance;
-		int tempINL1X, tempINL1Y, tempINL2X, tempINL2Y, tempINX, tempINY, tempChildX, tempChildY, tempLeafX, tempLeafY; // temporary
-																														// co-ordinate
+		int tempINL1X, tempINL1Y, tempINL2X, tempINL2Y, tempINX, tempINY, tempChildX, tempChildY, tempLeafX, tempLeafY; // temporary co-ordinate
+																														
 		int leafDistance, INdistance, INL2distance, INL1distance, childDistance;
 		int nbOfIN = 0, nbOfINL2 = 0, nbOfINL1 = 0, nbOfChild = 0;
 		int INwidth, INL2width, INL1width, childWidth, leavesWidth;
@@ -182,7 +182,6 @@ public class MyPanel extends JPanel {
 							child = (InternalNode) tempINL1.getLeftMost();
 							tempChildY = tempINL1Y + verticalDistance;
 							while (child != null && child.getUpNode() == tempINL1) {
-//								System.out.println("Printing child node in co-ordinate (" + tempChildX + "," + tempChildY + ")");
 								g2D.setPaint(Color.black);
 								g2D.drawOval(tempChildX, tempChildY, 15, 15);
 								g2D.fillOval(tempChildX, tempChildY, 15, 15);
@@ -211,7 +210,6 @@ public class MyPanel extends JPanel {
 			} else {
 				// INTERNAL NODE LAYER
 				while (tempIN != null) {
-//					System.out.println("Printing INTERNAL NODE in co-ordinate (" + tempINX + "," + tempINY + ")");
 
 					// Paint the InternalNode
 					g2D.setPaint(Color.black);
