@@ -9,7 +9,7 @@ public class MyFrame extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 	MyPanel panel;
 
 	public MyFrame(FSTree tree) {

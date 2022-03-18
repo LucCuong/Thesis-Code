@@ -18,10 +18,13 @@ public class MyPanel extends JPanel {
 	 * 
 	 */
 	private FSTree tree;
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 	private int width = 1900;
 	private int height = 1000;
-
+	private static int imageID = 0;
+	private File file;
+	
+	
 	public MyPanel(FSTree tree) {
 
 		this.tree = tree;
@@ -58,7 +61,7 @@ public class MyPanel extends JPanel {
 		
 		// Calculations
 		leavesWidth = nbOfLeaf >= 25? 1800: (int) nbOfLeaf * 50 + 200;
-		leafDistance = (int) leavesWidth / nbOfLeaf;
+		leafDistance = nbOfLeaf == 1 ? leavesWidth : (int) leavesWidth / (nbOfLeaf - 1);
 		tempLeafX = nbOfLeaf == 1 ? middleScreen : (int) middleScreen - (leavesWidth / 2);
 		heightDistance = (int) (height - 100) / heightOfTree;
 		verticalDistance = (int) heightDistance / 3; 
@@ -301,11 +304,11 @@ public class MyPanel extends JPanel {
 
 		}
 		try {
-			ImageIO.write(bi, "PNG", new File("C:\\Users\\dinhc\\OneDrive\\Desktop\\Thesis\\Images\\TreeImage.PNG"));
-			g2D.dispose();
+			imageID++;
+			file = new File("C:\\Users\\dinhc\\OneDrive\\Desktop\\Thesis\\Images\\TreeImage" + imageID + ".PNG");
+			ImageIO.write(bi, "PNG", file);
 		} catch (IOException e) {
 			e.printStackTrace();
-			g2D.dispose();
 		}
 	}
 }

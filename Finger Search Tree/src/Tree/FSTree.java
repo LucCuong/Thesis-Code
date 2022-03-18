@@ -9,7 +9,11 @@ public class FSTree {
 	private Leaf firstLeaf;
 	private OwnStorage ownStorage;
 	private Storage storage;
-	static long count = 0;
+	public long searchCount = 0;
+	public long ownSearchCount = 0;
+	public long INL1splitCount = 0;
+	public long INL2splitCount = 0;
+	public long INsplitCount = 0;
 
 	public FSTree() {
 		root = new InternalNode(1, null, null, null, null, null);
@@ -23,7 +27,19 @@ public class FSTree {
 		root.setLeftINL2(firstINL2);
 		root.setRightINL2(firstINL2);
 	}
-
+	
+	public Leaf linearSearch(Leaf f, int x) {
+		Leaf temp = f;
+		while (temp != null && temp.getValue() < x) {
+			if (temp.getValue() == x)
+				return temp;
+			if (temp.getNext() == null)
+				return temp;
+			temp = temp.getNext();
+		}
+		return temp;
+	}
+	
 	public Leaf search(Leaf f, int x) {
 		if (f.getValue() == x) {
 			return f;
@@ -49,7 +65,7 @@ public class FSTree {
 	}
 
 	public Leaf helpSearch(InternalNode current) {
-		count++;
+		searchCount++;
 		InternalNode tempIN = current;
 		IntermediateNodeLevel2 tempINL2;
 		IntermediateNodeLevel1 tempINL1;
@@ -118,7 +134,7 @@ public class FSTree {
 	}
 
 	public Leaf helpSearch2(IntermediateNodeLevel2 current) {
-		count++;
+		searchCount++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -140,7 +156,7 @@ public class FSTree {
 			}
 
 			tempIN = tempINL1.getUpNode().getUpNode();
-			tempLeaf = (Leaf) tempINL1.getRightMost(); // Rightmost leaf spanned by current INL1
+			tempLeaf = (Leaf) tempINL1.getRightMost(); // Rightmost leaf spanned by current INL2
 
 			if (tempLeaf.getValue() == storage.getX())
 				return tempLeaf;
@@ -186,7 +202,7 @@ public class FSTree {
 	}
 
 	public Leaf helpSearch1(IntermediateNodeLevel1 current) {
-		count++;
+		searchCount++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -301,7 +317,7 @@ public class FSTree {
 	}
 
 	public Leaf helpOwnSearch1(IntermediateNodeLevel1 current, boolean rightDirection) {
-		count++;
+		searchCount++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -419,7 +435,7 @@ public class FSTree {
 	}
 
 	public Leaf helpOwnSearch2(IntermediateNodeLevel2 current, boolean rightDirection) {
-		count++;
+		searchCount++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -518,7 +534,7 @@ public class FSTree {
 	}
 
 	public Leaf helpOwnSearch(InternalNode current, boolean rightDirection) {
-		count++;
+		searchCount++;
 		InternalNode tempIN = current;
 		IntermediateNodeLevel2 tempINL2;
 		IntermediateNodeLevel1 tempINL1;
@@ -648,7 +664,7 @@ public class FSTree {
 			return f;
 
 		f.incCounter();
-		f.updateTriple();
+		ancestor = f.updateTriple();
 		newTriples = (LinkedList<Triple>) f.getTriples().clone();
 		Leaf newLeaf = new Leaf(f.getCounter(), x, f, f.getNext(), newTriples, f.getUpNode());
 		if (f.getNext() != null)
@@ -659,7 +675,6 @@ public class FSTree {
 			upNode.setRightMost(newLeaf);
 		upNode.incNumberOfDownNode();
 		upNode.split();
-		ancestor = f.getTriples().getFirst().getAncestor();
 		ancestor.split(this);
 		return newLeaf;
 	}
