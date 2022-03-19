@@ -11,9 +11,12 @@ public class FSTree {
 	private Storage storage;
 	public long searchCount = 0;
 	public long ownSearchCount = 0;
-	public long INL1splitCount = 0;
-	public long INL2splitCount = 0;
-	public long INsplitCount = 0;
+	public static long splitINL1 = 0;
+	public static long splitINL2 = 0;
+	public static long splitTotal = 0;
+	public static long mergeINL1 = 0;
+	public static long mergeINL2 = 0;
+	public static long mergeTotal = 0;
 
 	public FSTree() {
 		root = new InternalNode(1, null, null, null, null, null);
@@ -239,7 +242,7 @@ public class FSTree {
 					InternalNode subNode = (InternalNode) current.getLeftMost();
 					storage.setINL2(subNode.getLeftINL2());
 					storage.setINL1(subNode.getLeftINL2().getLeftINL1());
-					return helpSearch1(storage.getINL1());
+					return helpSearch2(storage.getINL2());
 				} else {
 					// The sub node is a leaf
 					tempLeaf = (Leaf) current.getLeftMost();
@@ -279,7 +282,7 @@ public class FSTree {
 						storage.setINL1(tempINL1.getNext());
 					else
 						storage.setINL1(tempINL1);
-					return helpSearch1(storage.getINL1());
+					return helpSearch2(storage.getINL2());
 				}
 				tempLeaf = (Leaf) current.getRightMost();
 				if(tempLeaf.getValue() == storage.getX())
@@ -317,7 +320,7 @@ public class FSTree {
 	}
 
 	public Leaf helpOwnSearch1(IntermediateNodeLevel1 current, boolean rightDirection) {
-		searchCount++;
+		ownSearchCount++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -357,7 +360,6 @@ public class FSTree {
 					if (rightINL1 != null && rightINL1.getPrev() != ownStorage.getLeftINL1()) {
 						return helpOwnSearch1(rightINL1.getPrev(), false);
 					} else {
-//						System.out.println("The leaf x doesn't exist!!!");
 						return ownStorage.getLeftBarrier();
 					}
 				}
@@ -435,7 +437,7 @@ public class FSTree {
 	}
 
 	public Leaf helpOwnSearch2(IntermediateNodeLevel2 current, boolean rightDirection) {
-		searchCount++;
+		ownSearchCount++;
 		InternalNode tempIN;
 		IntermediateNodeLevel1 tempINL1;
 		IntermediateNodeLevel2 tempINL2;
@@ -534,7 +536,7 @@ public class FSTree {
 	}
 
 	public Leaf helpOwnSearch(InternalNode current, boolean rightDirection) {
-		searchCount++;
+		ownSearchCount++;
 		InternalNode tempIN = current;
 		IntermediateNodeLevel2 tempINL2;
 		IntermediateNodeLevel1 tempINL1;

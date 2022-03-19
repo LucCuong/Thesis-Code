@@ -25,6 +25,8 @@ public class IntermediateNodeLevel2 {
 		if (numberOfDownNode > gammaD) {
 			// the INL2 doesn't have a pair yet
 			if (pair == null) {
+				FSTree.splitINL2++;
+				FSTree.splitTotal++;
 				// create a new pair node and assign the new pair as rightmost INL2
 				IntermediateNodeLevel2 newINL2 = new IntermediateNodeLevel2(upNode, this, this.next, this.rightINL1,
 						this.rightINL1);
@@ -38,6 +40,8 @@ public class IntermediateNodeLevel2 {
 				pair.setLeftINL1(rightINL1);
 				pair.incNumberOfDownNode();
 				if (pair.getNumberOfDownNode() == gammaD) {
+					FSTree.splitINL2++;
+					FSTree.splitTotal++;
 					pair.setPair(null);
 					pair = null;
 					if (upNode.getRightINL2() == this)
@@ -141,6 +145,8 @@ public class IntermediateNodeLevel2 {
 				// The previous node doesn't have a pair node
 				// => fuse this node with the previous node
 				if (prev != null) {
+					FSTree.mergeINL2++;
+					FSTree.mergeTotal++;
 					prev.setPair(this);
 					pair = prev;
 					// Two nodes don't have the same up node
@@ -169,6 +175,8 @@ public class IntermediateNodeLevel2 {
 				}
 				// The previous node is null
 				if (next != null) {
+					FSTree.mergeINL2++;
+					FSTree.mergeTotal++;
 					next.setPair(this);
 					pair = next;
 					// Make sure the left node of the pair always have gammaD sub nodes

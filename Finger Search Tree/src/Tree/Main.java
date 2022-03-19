@@ -23,7 +23,7 @@ public class Main {
 		temp2 = temp;
 //		tree.paintImage();
 //		long start = System.nanoTime();
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 1; i <= 1000; i++) {
 			int_random = rand.nextInt(upperbound);
 			int_random = int_random < 0 ? int_random* (-1) : int_random;
 			System.out.println(int_random);
@@ -37,8 +37,6 @@ public class Main {
 //		long finish = System.nanoTime();
 //		long timeElapsed = finish - start;
 //		System.out.println("Finished insertions in " + (double) timeElapsed / 1000000000);
-		tree.insert(first, 7);
-		tree.paintImage();
 		
 //		tree.delete(temp2);
 //		tree.paintImage();
@@ -51,15 +49,17 @@ public class Main {
 //		timeElapsed = finish - start;
 //		System.out.println("Finished search in " + (double) timeElapsed / 1000000000);
 //		System.out.println("the found leaf: " + temp.getValue() + ", called funtions " + FSTree.count + " times");
-//
-//		Result result = JUnitCore.runClasses(TestSuite.class);
-//
-//		for (Failure failure : result.getFailures()) {
-//			System.out.println(failure.toString());
-//		}
-//		System.out.println(result.wasSuccessful());
-//		tree.paintImage();
 
 	}
+	public void searchRepetition(FSTree tree) {
+		
+	}
+	public void callTestSuite() {
+		Result result = JUnitCore.runClasses(TestSuite.class);
 
+		for (Failure failure : result.getFailures()) {
+			System.out.println(failure.toString());
+		}
+		System.out.println(result.wasSuccessful());
+	}
 }

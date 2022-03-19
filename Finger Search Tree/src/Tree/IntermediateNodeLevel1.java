@@ -9,7 +9,7 @@ public class IntermediateNodeLevel1 {
 	private IntermediateNodeLevel1 prev;
 	private IntermediateNodeLevel1 next;
 	private IntermediateNodeLevel1 pair;
-
+	
 	public IntermediateNodeLevel1(IntermediateNodeLevel2 upNode, IntermediateNodeLevel1 prev,
 			IntermediateNodeLevel1 next, Node leftMost, Node rightMost) {
 		this.upNode = upNode;
@@ -25,6 +25,8 @@ public class IntermediateNodeLevel1 {
 		if (numberOfDownNode > deltaD) {
 			// the INL1 doesn't have a pair yet
 			if (pair == null) {
+				FSTree.splitINL1++;
+				FSTree.splitTotal++;
 				// create a new pair node and assign the new pair as rightmost INL1
 				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(this.upNode, this, this.next,
 						this.rightMost, this.rightMost);
@@ -38,6 +40,8 @@ public class IntermediateNodeLevel1 {
 				pair.setLeftMost(rightMost);
 				pair.incNumberOfDownNode();
 				if (pair.getNumberOfDownNode() == deltaD) {
+					FSTree.splitINL1++;
+					FSTree.splitTotal++;
 					pair.setPair(null);
 					pair = null;
 					upNode.incNumberOfDownNode();
@@ -137,6 +141,8 @@ public class IntermediateNodeLevel1 {
 				// The previous node doesn't have a pair node
 				// => fuse this node with the previous node
 				if (prev != null) {
+					FSTree.mergeINL1++;
+					FSTree.mergeTotal++;
 					prev.setPair(this);
 					pair = prev;
 					// Two nodes don't have the same up node
@@ -161,6 +167,8 @@ public class IntermediateNodeLevel1 {
 				}
 				// The previous node is null
 				if (next != null) {
+					FSTree.mergeINL1++;
+					FSTree.mergeTotal++;
 					next.setPair(this);
 					pair = next;
 					if(pair == upNode.getRightINL1())

@@ -10,9 +10,6 @@ public class OwnStorage {
 	private InternalNode failIN;
 	private IntermediateNodeLevel2 failINL2;
 	private IntermediateNodeLevel1 failINL1;
-	private InternalNode tempIN;
-	private IntermediateNodeLevel1 tempINL1;
-	private IntermediateNodeLevel2 tempINL2;
 	private Leaf leftBarrier;
 	private Leaf rightBarrier;
 	private int x;
@@ -88,24 +85,6 @@ public class OwnStorage {
 	}
 	public void setFailINL1(IntermediateNodeLevel1 failINL1) {
 		this.failINL1 = failINL1;
-	}
-	public InternalNode getTempIN() {
-		return tempIN;
-	}
-	public void setTempIN(InternalNode tempIN) {
-		this.tempIN = tempIN;
-	}
-	public IntermediateNodeLevel1 getTempINL1() {
-		return tempINL1;
-	}
-	public void setTempINL1(IntermediateNodeLevel1 tempINL1) {
-		this.tempINL1 = tempINL1;
-	}
-	public IntermediateNodeLevel2 getTempINL2() {
-		return tempINL2;
-	}
-	public void setTempINL2(IntermediateNodeLevel2 tempINL2) {
-		this.tempINL2 = tempINL2;
 	}
 	
 }
