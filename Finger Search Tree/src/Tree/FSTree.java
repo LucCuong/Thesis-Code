@@ -641,7 +641,7 @@ public class FSTree {
 				if (current.getUpNode() != null) {
 					ownStorage.setRightIN(current);
 					ownStorage.setRightBarrier(tempLeaf);
-					if (current.getUpNode() != null)
+					if (current.getUpNode() != ownStorage.getFailINL1())
 						return helpOwnSearch1(current.getUpNode(), false);
 					if (ownStorage.getLeftIN() != null && ownStorage.getLeftIN().getNext() != ownStorage.getRightIN())
 						return helpOwnSearch(ownStorage.getLeftIN().getNext(), true);
