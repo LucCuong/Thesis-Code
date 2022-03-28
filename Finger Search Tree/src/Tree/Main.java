@@ -12,49 +12,121 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-		Random rand = new Random();
-		FSTree tree = new FSTree();
-		Leaf first = tree.getFirstLeaf();
-		Leaf temp2,temp = first;
-//		int upperbound = Integer.MAX_VALUE;
-		int upperbound = 100;
-		int int_random;
-		int current = 0;
-		temp2 = temp;
-//		tree.paintImage();
-//		long start = System.nanoTime();
-		for (int i = 1; i <= 1000; i++) {
-			int_random = rand.nextInt(upperbound);
-			int_random = int_random < 0 ? int_random* (-1) : int_random;
-			System.out.println(int_random);
-			current += int_random;
-			temp = tree.ownSearch(first, current );
-			temp = tree.insert(temp, current );
-			if(i >= 14)
-				temp2 = temp;
-		}
-//		
-//		long finish = System.nanoTime();
-//		long timeElapsed = finish - start;
-//		System.out.println("Finished insertions in " + (double) timeElapsed / 1000000000);
-		
-//		tree.delete(temp2);
-//		tree.paintImage();
-//		start = System.nanoTime();
-//		for(int i = 0; i <= 65; i++ ){
-//			tree.search(first, i);
-//		}
-//		temp = tree.search(first, 33);
-//		finish = System.nanoTime();
-//		timeElapsed = finish - start;
-//		System.out.println("Finished search in " + (double) timeElapsed / 1000000000);
-//		System.out.println("the found leaf: " + temp.getValue() + ", called funtions " + FSTree.count + " times");
+		splitRandomCounter(4000);
 
 	}
-	public void searchRepetition(FSTree tree) {
+	
+	public static void splitCount(int times) {
+		FSTree tree = new FSTree();
+		Leaf temp = tree.getFirstLeaf();
+		for (int i = 0; i <= times; i++) {
+			temp = tree.insert(temp, i );
+		}
+		System.out.println("Level 1 node: split " + FSTree.splitINL1 + " times");
+		System.out.println("Level 2 node: split " + FSTree.splitINL2 + " times");
+		System.out.println("Level 1 & 2 node: split " + FSTree.splitTotal + " times");
+	}
+	
+	public static void splitRandomCounter(int times) {
+		FSTree tree = new FSTree();
+		Random rand = new Random();
+		int upperbound = Integer.MAX_VALUE;
+		int int_random;
+		Leaf temp, first = tree.getFirstLeaf();
+		temp = first;
+		for (int i = 0; i <= times; i++) {
+			int_random = rand.nextInt(upperbound);
+			int_random = int_random < 0 ? int_random* (-1) : int_random;
+			temp = tree.search(tree.getFirstLeaf(), int_random );
+			temp = tree.insert(temp, int_random );
+		}
+		System.out.println("Level 1 node: split " + FSTree.splitINL1 + " times");
+		System.out.println("Level 2 node: split " + FSTree.splitINL2 + " times");
+		System.out.println("Level 1 & 2 node: split " + FSTree.splitTotal + " times");
+	}
+	public static void mergeCounter(int times) {
+		FSTree tree = new FSTree();
+		Leaf temp, first = tree.getFirstLeaf();
+		temp = first;
+		for (int i = 0; i <= 3*times; i++) {
+			temp = tree.insert(temp, i );
+		}
+		for (int i = 0; i <= times; i++) {
+			first = temp;
+			temp = temp.getPrev();
+			tree.delete(first);
+		}
+		System.out.println("Level 1 node: merged " + FSTree.mergeINL1 + " times");
+		System.out.println("Level 2 node: merged " + FSTree.mergeINL2 + " times");
+		System.out.println("Level 1 & 2 node: merged " + FSTree.mergeTotal + " times");
+	}
+	
+	public static void mergeRandomCounter(int times) {
+		FSTree tree = new FSTree();
+		Random rand = new Random();
+		int upperbound = Integer.MAX_VALUE - 1;
+		int int_random;
+		Leaf temp, first = tree.getFirstLeaf();
+		temp = first;
+		for (int i = 0; i <= 3*times; i++) {
+			int_random = rand.nextInt(upperbound);
+			int_random = int_random < 0 ? int_random* (-1) : int_random;
+			temp = tree.search(tree.getFirstLeaf(), int_random );
+			temp = tree.insert(temp, int_random );
+		}
+		for (int i = 0; i <= times; i++) {
+			int_random = rand.nextInt(upperbound);
+			int_random = int_random < 0 ? int_random* (-1) : int_random;
+			temp = tree.search(tree.getFirstLeaf(), int_random );
+			System.out.println("Deleting " + int_random);
+			tree.delete(temp);
+		}
+		System.out.println("Level 1 node: merged " + FSTree.mergeINL1 + " times");
+		System.out.println("Level 2 node: merged " + FSTree.mergeINL2 + " times");
+		System.out.println("Level 1 & 2 node: merged " + FSTree.mergeTotal + " times");
+	}
+	
+	public static void searchRunTime(int times) {
+		FSTree tree = new FSTree();
+		long start, finish, timeElapsed;
+		Leaf temp, first = tree.getFirstLeaf();
+		temp = first;
+		for (int i = 0; i <= times; i++) {
+			temp = tree.insert(temp, i );
+		}
+		start = System.nanoTime();
+		for (int i = 0; i <= times; i++) {
+			tree.search(first, i );
+		}
+		finish = System.nanoTime();
+		timeElapsed = finish - start;
+		System.out.println("Finished original search in " + (double) timeElapsed / 1000000000 + "s");
+		start = System.nanoTime();
+		for (int i = 0; i <= times; i++) {
+			tree.ownSearch(first, i );
+		}
+		finish = System.nanoTime();
+		timeElapsed = finish - start;
+		System.out.println("Finished alternative search in " + (double) timeElapsed / 1000000000 + "s");
 		
 	}
-	public void callTestSuite() {
+	
+	public static void searchRepetition(int times) {
+		FSTree tree = new FSTree();
+		int x = times / 2;
+		Leaf temp, first = tree.getFirstLeaf();
+		temp = first;
+		for (int i = 0; i <= times; i++) {
+			temp = tree.insert(temp, i );
+		}
+		
+		tree.search(first, x);
+		System.out.println("The original search called itself " + tree.searchCount + " times searching the element " + x);
+		tree.ownSearch(first, x);
+		System.out.println("The alternative search called itself " + tree.ownSearchCount + " times searching the element " + x);
+	}
+	
+	public static void callTestSuite() {
 		Result result = JUnitCore.runClasses(TestSuite.class);
 
 		for (Failure failure : result.getFailures()) {

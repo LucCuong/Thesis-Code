@@ -17,6 +17,10 @@ public class MyPanel extends JPanel {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private FSTree tree;
 //	private static final long serialVersionUID = 1L;
 	private int width = 1900;
