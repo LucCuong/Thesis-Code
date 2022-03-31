@@ -25,8 +25,6 @@ public class IntermediateNodeLevel1 {
 		if (numberOfDownNode > deltaD) {
 			// the INL1 doesn't have a pair yet
 			if (pair == null) {
-				FSTree.splitINL1++;
-				FSTree.splitTotal++;
 				// create a new pair node and assign the new pair as rightmost INL1
 				IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(this.upNode, this, this.next,
 						this.rightMost, this.rightMost);
@@ -58,6 +56,8 @@ public class IntermediateNodeLevel1 {
 
 		// The current node has a pair node and reaches deltaD sub nodes
 		if ((numberOfDownNode == deltaD) && (pair != null) && (pair.getNumberOfDownNode() == deltaD)) {
+			FSTree.splitINL1++;
+			FSTree.splitTotal++;
 			pair.setPair(null);
 			pair = null;
 			upNode.incNumberOfDownNode();

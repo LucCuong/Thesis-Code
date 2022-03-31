@@ -13,6 +13,7 @@ public class FSTree {
 	public long ownSearchCount = 0;
 	public static long splitINL1 = 0;
 	public static long splitINL2 = 0;
+	public static long splitIN = 0;
 	public static long splitTotal = 0;
 	public static long mergeINL1 = 0;
 	public static long mergeINL2 = 0;
@@ -44,6 +45,7 @@ public class FSTree {
 	}
 	
 	public Leaf search(Leaf f, int x) {
+		searchCount++;
 		if (f.getValue() == x) {
 			return f;
 		}
@@ -300,6 +302,7 @@ public class FSTree {
 	}
 
 	public Leaf ownSearch(Leaf f, int x) {
+		ownSearchCount++;
 		ownStorage = new OwnStorage();
 		ownStorage.setX(x);
 		IntermediateNodeLevel1 upNode = f.getUpNode();

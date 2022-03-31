@@ -25,6 +25,8 @@ public class InternalNode extends Node {
 	public void split(FSTree tree) {
 		if (dead == false)
 			if (rightINL2 != leftINL2) {
+				FSTree.splitIN++;
+				FSTree.splitTotal++;
 				InternalNode newIN = new InternalNode(height, upNode, this, this.next, rightINL2, rightINL2);
 				rightINL2.setUpNode(newIN);
 				if(rightINL2.getPair() != null)
@@ -42,6 +44,8 @@ public class InternalNode extends Node {
 				// The current node is the root
 				// => Create a new root
 				if (upNode == null) {
+					FSTree.splitIN++;
+					FSTree.splitTotal++;
 					InternalNode newRoot = new InternalNode((this.height + 1), null, null, null, null, null);
 					IntermediateNodeLevel2 newINL2 = new IntermediateNodeLevel2(newRoot, null, null, null, null);
 					IntermediateNodeLevel1 newINL1 = new IntermediateNodeLevel1(newINL2, null, null, this, newIN);
