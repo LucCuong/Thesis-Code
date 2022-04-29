@@ -12,7 +12,7 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-		searchRandomRunTime(100000);
+		maxSizeTree(4);
 
 	}
 	
@@ -181,5 +181,40 @@ public class Main {
 			System.out.println(failure.toString());
 		}
 		System.out.println(result.wasSuccessful());
+	}
+	
+	public static long maxSizeTree(int height) {
+		long result = 1;
+		for(int i = 1; i <= height; i++) {
+			result *= internalDegree(i)*GammaD(i)*DeltaD(i);
+		}
+		System.out.println("The maximal size of the tree of height " + height + " is: " + result);
+		return result;
+	}
+	public static long DeltaD(int d) {
+		long result = 2;
+		for (int i = 1; i < d; i++) {
+			result = (long) Math.pow(2, result);
+		}
+		System.out.println("Delta of height " + d + " is: " + result);
+		return result;
+	}
+	private static long GammaD(int d) {
+		long result;
+		long power2d1 = (long) Math.pow(2, (d - 1));
+		long power1 = 3 * (d - 1) * power2d1;
+		long power2 = (long) Math.pow(2, d) + power2d1 - 2;
+		result = (long) Math.pow(2, power1) * (long) Math.pow(2, power2);
+		System.out.println("Gamma of height " + d + " is: " + result);
+		return result;
+	}
+	public static long internalDegree(int d) {
+		long result;
+		long power2d = (long) Math.pow(2, d);
+		long power = 3*d*power2d;
+		long delta = DeltaD(d);
+		result = (long) Math.pow(2, power) * delta;
+		System.out.println("Internal degree of height " + d + " is: " + result);
+		return result;
 	}
 }
